@@ -26,28 +26,33 @@
         "bride": "La mariée",
         "groom": "Le marié",
         "bio": {
-            "paola": "TODO : quelques mots sur Paola.",
-            "azarias": "TODO : quelques mots sur Azarias."
+            "paola": "Architecte d'intérieur à Kinshasa, Paola dessine des maisons où l'on a envie de rester. Elle rit fort, danse sans prévenir et croit qu'un bon café règle presque tout.",
+            "azarias": "Ingénieur le jour, pianiste le soir, Azarias est calme, drôle et fidèle. Il a toujours une mélodie prête pour les grands moments."
         }
     },
     "story": {
         "kicker": "Notre histoire",
-        "title": "Comment tout a commencé",
+        "title": "Une histoire écrite sous la pluie et les étoiles",
         "items": {
             "meeting": {
-                "year": "TODO",
-                "title": "La rencontre",
-                "text": "TODO : comment tout a commencé."
+                "year": "Septembre 2018",
+                "title": "Un orage sur Kinshasa",
+                "text": "Une pluie soudaine sur le campus, un seul parapluie, et deux inconnus qui rient de partager le même abri. Il propose de la raccompagner. Ils parleront jusqu'à la nuit."
             },
             "love": {
-                "year": "TODO",
-                "title": "Le premier « je t'aime »",
-                "text": "TODO : un souvenir à partager."
+                "year": "Décembre 2020",
+                "title": "Un « je t'aime » sous les étoiles",
+                "text": "Une coupure d'électricité, la terrasse de la maison familiale et un ciel plein d'étoiles. Dans le noir, Azarias a enfin trouvé les mots."
             },
             "proposal": {
-                "year": "TODO",
-                "title": "La demande",
-                "text": "TODO : la question, la réponse."
+                "year": "Juillet 2025",
+                "title": "Le oui au bord du fleuve",
+                "text": "Au coucher du soleil sur le fleuve Congo, familles cachées derrière les palmiers, Azarias met un genou à terre. Paola dit oui avant la fin de sa phrase."
+            },
+            "forever": {
+                "year": "24 janvier 2027",
+                "title": "Le plus beau des jours",
+                "text": "Deux familles deviennent une seule. Nous voulons partager ce moment avec celles et ceux qui nous ont portés et fait rire. Vous faites partie de notre histoire."
             }
         }
     },
@@ -65,7 +70,7 @@
         },
         "religious": {
             "title": "Mariage religieux",
-            "text": "Les vœux et la bénédiction nuptiale."
+            "text": "Le discours de mariage et les vœux."
         }
     },
     "gallery": {
@@ -75,5 +80,10 @@
     },
     "footer": {
         "thanks": "Merci de célébrer avec nous"
+    },
+    "together": {
+        "kicker": "Ensemble",
+        "title": "Pour la vie",
+        "quote": "Je t'ai choisi hier, je te choisis aujourd'hui, je te choisirai toujours."
     }
 }

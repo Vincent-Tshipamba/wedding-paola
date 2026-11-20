@@ -5,6 +5,7 @@ import { HeroBackground } from "./HeroBackground";
 import BlurText from "./BlurText";
 import FadeContent from "./FadeContent";
 import StarBorder from "./StarBorder";
+import { ConfettiBurst } from "./ConfettiBurst";
 
 export function Hero() {
     const t = useTranslations("hero");
@@ -16,7 +17,7 @@ export function Hero() {
     return (
         <section id="top" className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 pt-24 text-center">
             <HeroBackground />
-            {/* <Confe /> */}
+            <ConfettiBurst />
             <div className="relative z-10 flex flex-col items-center">
                 <FadeContent blur duration={900}>
                     <p className="mb-6 text-xs uppercase tracking-[0.45em] text-gold sm:text-sm">{t("kicker")}</p>

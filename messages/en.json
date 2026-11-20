@@ -26,28 +26,33 @@
         "bride": "The bride",
         "groom": "The groom",
         "bio": {
-            "paola": "TODO: a few words about Paola.",
-            "azarias": "TODO: a few words about Azarias."
+            "paola": "An interior architect in Kinshasa, Paola designs homes you never want to leave. She laughs loudly, dances without warning and believes a good coffee fixes almost everything.",
+            "azarias": "An engineer by day and a pianist by night, Azarias is calm, funny and loyal. He always has a melody ready for the big moments."
         }
     },
     "story": {
         "kicker": "Our story",
-        "title": "How it all began",
+        "title": "A story written in the rain and the stars",
         "items": {
             "meeting": {
-                "year": "TODO",
-                "title": "The first meeting",
-                "text": "TODO: how it all began."
+                "year": "September 2018",
+                "title": "A storm over Kinshasa",
+                "text": "A sudden downpour on campus, a single umbrella, and two strangers laughing as they share the same shelter. He offers to walk her home. They talk until nightfall."
             },
             "love": {
-                "year": "TODO",
-                "title": "The first “I love you”",
-                "text": "TODO: a memory to share."
+                "year": "December 2020",
+                "title": "An “I love you” under the stars",
+                "text": "A power cut, the family terrace and a sky full of stars. In the dark, Azarias finally found the words."
             },
             "proposal": {
-                "year": "TODO",
-                "title": "The proposal",
-                "text": "TODO: the question, the answer."
+                "year": "July 2025",
+                "title": "The yes by the river",
+                "text": "At sunset over the Congo River, with their families hidden behind the palm trees, Azarias goes down on one knee. Paola says yes before he finishes his sentence."
+            },
+            "forever": {
+                "year": "January 24, 2027",
+                "title": "The most beautiful day",
+                "text": "Two families become one. We want to share this moment with those who carried us and made us laugh. You are part of our story."
             }
         }
     },
@@ -75,5 +80,10 @@
     },
     "footer": {
         "thanks": "Thank you for celebrating with us"
+    },
+    "together": {
+        "kicker": "Together",
+        "title": "For life",
+        "quote": "I chose you yesterday, I choose you today, I will choose you always."
     }
 }
