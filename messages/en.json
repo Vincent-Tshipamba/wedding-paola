@@ -4,10 +4,15 @@
         "description": "Join us in celebrating the wedding of Paola Odimba and Azarias Lubobo."
     },
     "nav": {
+        "home": "Home",
         "couple": "The couple",
+        "together": "Together",
         "story": "Our story",
         "events": "The dates",
-        "gallery": "Gallery"
+        "gallery": "Gallery",
+        "cta": "Save the date",
+        "switchLanguage": "Switch to French",
+        "menu": "Menu"
     },
     "hero": {
         "kicker": "We are getting married",

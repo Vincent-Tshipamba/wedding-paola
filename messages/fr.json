@@ -4,10 +4,15 @@
         "description": "Rejoignez-nous pour célébrer le mariage de Paola Odimba et Azarias Lubobo."
     },
     "nav": {
+        "home": "Accueil",
         "couple": "Les mariés",
+        "together": "Ensemble",
         "story": "Notre histoire",
         "events": "Les dates",
-        "gallery": "Galerie"
+        "gallery": "Galerie",
+        "cta": "Réserver la date",
+        "switchLanguage": "Passer en anglais",
+        "menu": "Menu"
     },
     "hero": {
         "kicker": "Nous nous marions",

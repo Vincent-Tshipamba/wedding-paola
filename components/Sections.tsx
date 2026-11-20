@@ -9,7 +9,7 @@ const Title = ({ kicker, children }: { kicker: string; children: React.ReactNode
     <FadeContent blur duration={900}>
         <div className="mb-16 text-center">
             <p className="mb-3 text-xs uppercase tracking-[0.45em] text-gold">{kicker}</p>
-            <h2 className="font-serif text-4xl font-light text-cream sm:text-6xl">{children}</h2>
+            <h2 className="font-heading text-4xl font-light text-cream sm:text-6xl">{children}</h2>
         </div>
     </FadeContent>
 );
@@ -50,14 +50,14 @@ export function Couple() {
                 {people.map((p, i) => (
                     <FadeContent key={p.firstName} blur delay={i * 200} duration={1000}>
                         <SpotlightCard className="relative overflow-hidden border-gold/20! bg-surface! text-center" spotlightColor="rgba(212,175,55,0.22)">
-                            <span aria-hidden className="pointer-events-none absolute inset-x-0 top-6 select-none font-serif text-[7rem] leading-none text-transparent [-webkit-text-stroke:1px_rgba(212,175,55,.18)] sm:text-[9rem]">
+                            <span aria-hidden className="pointer-events-none absolute inset-x-0 top-6 select-none font-mono text-[7rem] leading-none text-transparent [-webkit-text-stroke:1px_rgba(212,175,55,.18)] sm:text-[9rem]">
                                 {p.firstName}
                             </span>
                             <div className="relative pt-16">
                                 <Portrait src={p.photo} initial={p.firstName[0]} />
                                 <p className="mt-8 text-xs uppercase tracking-[0.4em] text-ember">{p.role}</p>
                                 <h3 className="mt-2 font-script text-5xl text-gold-soft">{p.firstName} {p.lastName}</h3>
-                                <p className="mx-auto mt-4 max-w-xs text-cream/70">{p.bio}</p>
+                                <p className="mx-auto mt-4 max-w-xs text-cream/70 font-sans">{p.bio}</p>
                             </div>
                         </SpotlightCard>
                     </FadeContent>
@@ -140,8 +140,8 @@ export function Events() {
                     const d = new Date(e.date);
                     return (
                         <FadeContent key={e.id} blur delay={i * 150} duration={900}>
-                            <SpotlightCard className="h-full border-gold/20! bg-surface! text-center" spotlightColor="rgba(230,57,70,0.25)">
-                                <p className="text-xs tracking-[0.35em] text-ember">{f.dateTime(d, { weekday: "long" })}</p>
+                            <SpotlightCard className="first-letter:capitalize h-full border-gold/20! bg-surface! text-center" spotlightColor="rgba(230,57,70,0.25)">
+                                <p className="text-sm tracking-[0.35em] text-ember">{f.dateTime(d, { weekday: "long" })}</p>
                                 <p className="mt-2 font-serif text-8xl leading-none text-gold-soft">{f.dateTime(d, { day: "numeric" })}</p>
                                 <p className="font-serif text-2xl tracking-widest text-cream">{f.dateTime(d, { month: "long", year: "numeric" })}</p>
                                 <h3 className="mt-6 font-serif text-3xl text-gold">{t(`${e.id}.title`)}</h3>
@@ -164,10 +164,10 @@ export function Gallery() {
         <section id="gallery" className="bg-night">
             <div className="py-4 px-6 text-center">
                 <p className="mb-3 text-xs uppercase tracking-[0.45em] text-gold">{t("kicker")}</p>
-                <h2 className="font-serif text-4xl font-light text-cream sm:text-6xl">{t("title")}</h2>
+                <h2 className="font-script text-4xl font-light text-cream sm:text-6xl">{t("title")}</h2>
                 <p className="mt-3 text-sm text-cream/50">{t("hint")}</p>
             </div>
-            <div className="h-svh">
+            <div className="dome-scroll-safe h-[75svh] md:h-svh">
                 <DomeGallery fit={0.8} minRadius={600} maxVerticalRotationDeg={0} segments={34} dragDampening={2} grayscale={false} overlayBlurColor="#0a0809" />
             </div>
         </section>

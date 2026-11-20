@@ -15,7 +15,7 @@ export function Hero() {
         second: f.dateTime(new Date(lastDate), { day: "numeric", month: "long", year: "numeric" }),
     });
     return (
-        <section id="top" className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 pt-24 text-center">
+        <section id="home" className="relative flex min-h-svh flex-col items-center justify-center overflow-hidden px-6 pt-24 text-center">
             <HeroBackground />
             <ConfettiBurst />
             <div className="relative z-10 flex flex-col items-center">
@@ -27,7 +27,7 @@ export function Hero() {
                     delay={150}
                     animateBy="words"
                     direction="top"
-                    className="justify-center font-serif text-6xl font-light text-gold-soft sm:text-8xl md:text-9xl"
+                    className="justify-center font-heading text-6xl font-light text-gold-soft sm:text-8xl md:text-9xl"
                 />
                 <FadeContent blur delay={700} duration={900}>
                     <p className="mt-6 font-serif text-xl italic text-cream sm:text-3xl">{dates} · {wedding.city}</p>

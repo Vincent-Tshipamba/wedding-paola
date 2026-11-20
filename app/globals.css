@@ -143,6 +143,11 @@ body {
   transform: none;
 }
 
+.dome-scroll-safe,
+.dome-scroll-safe * {
+  touch-action: pan-y !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal {
     opacity: 1;

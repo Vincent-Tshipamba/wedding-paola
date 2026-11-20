@@ -1,10 +1,11 @@
 import { Hero } from "@/components/Hero";
+import { Navbar } from "@/components/Navbar";
 import { Couple, Story, Events, Gallery, Footer, Marquee, Together } from "@/components/Sections";
 
 export default function Home() {
   return (
     <main>
-      {/* <Navbar /> */}
+      <Navbar />
       <Hero />
       <Marquee />
       <Couple />
