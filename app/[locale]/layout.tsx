@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { Cormorant_Garamond, Great_Vibes, Inter, Pinyon_Script } from "next/font/google";
+import { Cormorant_Garamond, Pinyon_Script } from "next/font/google";
 import { routing } from "@/src/i18n/routing";
 import SplashCursor from "@/components/SplashCursor";
 import "../globals.css";
@@ -10,7 +10,6 @@ import { StarField } from "@/components/StarField";
 
 const cormorant = Cormorant_Garamond({ subsets: ["latin"], weight: ["300", "400", "500", "600"], variable: "--font-cormorant" });
 const vibes = Pinyon_Script({ subsets: ["latin"], weight: "400", variable: "--font-vibes" });
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));

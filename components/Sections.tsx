@@ -162,7 +162,7 @@ export function Gallery() {
     const t = useTranslations("gallery");
     return (
         <section id="gallery" className="bg-night">
-            <div className="py-12 px-6 text-center">
+            <div className="py-4 px-6 text-center">
                 <p className="mb-3 text-xs uppercase tracking-[0.45em] text-gold">{t("kicker")}</p>
                 <h2 className="font-serif text-4xl font-light text-cream sm:text-6xl">{t("title")}</h2>
                 <p className="mt-3 text-sm text-cream/50">{t("hint")}</p>
