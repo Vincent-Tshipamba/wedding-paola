@@ -13,12 +13,13 @@
   --color-gold-soft: #f1d48a;
   --color-cream: #f6efe4;
 
+  --font-serif: var(--font-cormorant), Georgia, serif;
+  --font-script: var(--font-vibes), cursive;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+
   --font-sans: var(--font-cormoran);
   --font-mono: var(--font-vibes);
   --font-heading: var(--font-vibes);
-  --font-serif: var(--font-vibes), Georgia, serif;
-  --font-script: var(--font-cormorant), cursive;
-  --font-sans: var(--font-cormorant), system-ui, sans-serif;
 
   --animate-spin-slow: spin 50s linear infinite;
   --animate-spin-rev: spin-rev 70s linear infinite;
