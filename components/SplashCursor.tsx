@@ -317,7 +317,7 @@ function SplashCursor({
   colors = ['#4f8cff', '#2dd4bf', '#ffd166'],
   rainbow = true,
   colorSpeed = 1,
-  intensity = 1,
+  intensity = 0.4,
   size = 1,
   force = 1,
   swirl = 3,
