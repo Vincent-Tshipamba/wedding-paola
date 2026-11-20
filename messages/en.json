@@ -1,0 +1,79 @@
+{
+    "meta": {
+        "title": "Paola & Azarias — Our Wedding",
+        "description": "Join us in celebrating the wedding of Paola Odimba and Azarias Lubobo."
+    },
+    "nav": {
+        "couple": "The couple",
+        "story": "Our story",
+        "events": "The dates",
+        "gallery": "Gallery"
+    },
+    "hero": {
+        "kicker": "We are getting married",
+        "dates": "{first} & {second}",
+        "cta": "Save the dates"
+    },
+    "countdown": {
+        "days": "Days",
+        "hours": "Hours",
+        "minutes": "Minutes",
+        "seconds": "Seconds"
+    },
+    "couple": {
+        "kicker": "The couple",
+        "title": "Two hearts, one celebration",
+        "bride": "The bride",
+        "groom": "The groom",
+        "bio": {
+            "paola": "TODO: a few words about Paola.",
+            "azarias": "TODO: a few words about Azarias."
+        }
+    },
+    "story": {
+        "kicker": "Our story",
+        "title": "How it all began",
+        "items": {
+            "meeting": {
+                "year": "TODO",
+                "title": "The first meeting",
+                "text": "TODO: how it all began."
+            },
+            "love": {
+                "year": "TODO",
+                "title": "The first “I love you”",
+                "text": "TODO: a memory to share."
+            },
+            "proposal": {
+                "year": "TODO",
+                "title": "The proposal",
+                "text": "TODO: the question, the answer."
+            }
+        }
+    },
+    "events": {
+        "kicker": "Save the dates",
+        "title": "The celebrations",
+        "at": "at {time}",
+        "customary": {
+            "title": "Customary Wedding",
+            "text": "Families gather for the traditional dowry ceremony."
+        },
+        "civil": {
+            "title": "Civil Wedding",
+            "text": "The official union, surrounded by our loved ones."
+        },
+        "religious": {
+            "title": "Religious Wedding",
+            "text": "The vows and the nuptial blessing."
+        }
+    },
+    "gallery": {
+        "kicker": "Gallery",
+        "title": "Our favourite moments",
+        "hint": "Drag to explore"
+    },
+    "footer": {
+        "thanks": "Thank you for celebrating with us"
+    }
+}

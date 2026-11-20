@@ -1,0 +1,79 @@
+{
+    "meta": {
+        "title": "Paola & Azarias — Notre mariage",
+        "description": "Rejoignez-nous pour célébrer le mariage de Paola Odimba et Azarias Lubobo."
+    },
+    "nav": {
+        "couple": "Les mariés",
+        "story": "Notre histoire",
+        "events": "Les dates",
+        "gallery": "Galerie"
+    },
+    "hero": {
+        "kicker": "Nous nous marions",
+        "dates": "{first} & {second}",
+        "cta": "Réservez les dates"
+    },
+    "countdown": {
+        "days": "Jours",
+        "hours": "Heures",
+        "minutes": "Minutes",
+        "seconds": "Secondes"
+    },
+    "couple": {
+        "kicker": "Les mariés",
+        "title": "Deux cœurs, une seule fête",
+        "bride": "La mariée",
+        "groom": "Le marié",
+        "bio": {
+            "paola": "TODO : quelques mots sur Paola.",
+            "azarias": "TODO : quelques mots sur Azarias."
+        }
+    },
+    "story": {
+        "kicker": "Notre histoire",
+        "title": "Comment tout a commencé",
+        "items": {
+            "meeting": {
+                "year": "TODO",
+                "title": "La rencontre",
+                "text": "TODO : comment tout a commencé."
+            },
+            "love": {
+                "year": "TODO",
+                "title": "Le premier « je t'aime »",
+                "text": "TODO : un souvenir à partager."
+            },
+            "proposal": {
+                "year": "TODO",
+                "title": "La demande",
+                "text": "TODO : la question, la réponse."
+            }
+        }
+    },
+    "events": {
+        "kicker": "Réservez les dates",
+        "title": "Les célébrations",
+        "at": "à {time}",
+        "customary": {
+            "title": "Mariage coutumier",
+            "text": "La famille se réunit pour la dot, dans la tradition."
+        },
+        "civil": {
+            "title": "Mariage civil",
+            "text": "L'union officielle, entourée de nos proches."
+        },
+        "religious": {
+            "title": "Mariage religieux",
+            "text": "Les vœux et la bénédiction nuptiale."
+        }
+    },
+    "gallery": {
+        "kicker": "Galerie",
+        "title": "Nos plus beaux moments",
+        "hint": "Faites glisser pour explorer"
+    },
+    "footer": {
+        "thanks": "Merci de célébrer avec nous"
+    }
+}
