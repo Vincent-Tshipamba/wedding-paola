@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 import { logout } from "@/app/admin/actions";
 import type { Guest, TableRow } from "@/db/schema";
@@ -29,7 +30,7 @@ export function AdminApp({ guests, tables }: { guests: Guest[]; tables: TableRow
                     <p className="mt-1 text-xs uppercase tracking-[0.4em] text-gold">Guest management</p>
                 </div>
                 <div className="flex gap-2">
-                    <a href="/" className={btnGhost}>View site</a>
+                    <Link href="/" className={btnGhost}>View site</Link>
                     <form action={logout}><button className={btnGold}>Sign out</button></form>
                 </div>
             </header>
@@ -68,7 +69,7 @@ function DrinksPanel({ guests }: { guests: Guest[] }) {
             {rows.map(([name, n]) => (
                 <div key={name}>
                     <div className="mb-1 flex justify-between text-sm"><span>{name}</span><span className="text-gold-soft">{n}</span></div>
-                    <div className="h-2 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-gradient-to-r from-crimson to-gold" style={{ width: `${(n / max) * 100}%` }} /></div>
+                    <div className="h-2 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-linear-to-r from-crimson to-gold" style={{ width: `${(n / max) * 100}%` }} /></div>
                 </div>
             ))}
         </div>
