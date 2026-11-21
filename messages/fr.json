@@ -90,5 +90,13 @@
         "kicker": "Ensemble",
         "title": "Pour la vie",
         "quote": "Je t'ai choisi hier, je te choisis aujourd'hui, je te choisirai toujours."
+    },
+    "invitation": {
+        "kicker": "Vous êtes invité(e)",
+        "text": "Paola et Azarias ont la joie de vous convier à célébrer leur mariage.",
+        "seats": "{count, plural, one {# place réservée} other {# places réservées}}",
+        "table": "Votre table : {name}",
+        "tableSoon": "Votre table vous sera communiquée prochainement.",
+        "scan": "Présentez ce QR code à l'entrée."
     }
 }

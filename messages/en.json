@@ -90,5 +90,13 @@
         "kicker": "Together",
         "title": "For life",
         "quote": "I chose you yesterday, I choose you today, I will choose you always."
+    },
+    "invitation": {
+        "kicker": "You are invited",
+        "text": "Paola and Azarias are delighted to invite you to celebrate their wedding.",
+        "seats": "{count, plural, one {# seat reserved} other {# seats reserved}}",
+        "table": "Your table: {name}",
+        "tableSoon": "Your table will be announced soon.",
+        "scan": "Show this QR code at the entrance."
     }
 }
