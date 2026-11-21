@@ -1,10 +1,19 @@
+import { Suspense } from "react";
 import { asc, desc } from "drizzle-orm";
 import { db } from "@/db";
 import { guests, tables } from "@/db/schema";
 import { requireAdmin } from "@/lib/auth";
 import { AdminApp } from "@/components/admin/AdminApp";
 
-export default async function AdminPage() {
+export default function AdminPage() {
+    return (
+        <Suspense fallback={<main className="grid min-h-svh place-items-center text-cream/60">Loading…</main>}>
+            <AdminContent />
+        </Suspense>
+    );
+}
+
+async function AdminContent() {
     await requireAdmin();
     const [guestRows, tableRows] = await Promise.all([
         db.select().from(guests).orderBy(desc(guests.createdAt)),
