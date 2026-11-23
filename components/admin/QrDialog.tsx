@@ -17,13 +17,20 @@ function message(g: Guest, url: string) {
 }
 
 export function QrDialog({ guest, onClose }: { guest: Guest | null; onClose: () => void }) {
-    const [qr, setQr] = useState("");
+    const [qrResult, setQrResult] = useState({ url: "", value: "" });
     const [copied, setCopied] = useState(false);
     const url = guest ? inviteUrl(guest) : "";
+    const qr = qrResult.url === url ? qrResult.value : "";
 
     useEffect(() => {
-        setQr("");
-        if (url) QRCode.toDataURL(url, { width: 640, margin: 2, errorCorrectionLevel: "M" }).then(setQr);
+        if (!url) return;
+        let cancelled = false;
+        QRCode.toDataURL(url, { width: 640, margin: 2, errorCorrectionLevel: "M" }).then((value) => {
+            if (!cancelled) setQrResult({ url, value });
+        });
+        return () => {
+            cancelled = true;
+        };
     }, [url]);
 
     if (!guest) return <Dialog open={false} />;
