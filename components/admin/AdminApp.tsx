@@ -1,4 +1,5 @@
 "use client";
+import { Link } from "@/src/i18n/navigation";
 import { useState } from "react";
 import type { Guest, TableRow } from "@/db/schema";
 import { logout } from "@/lib/admin-actions";
@@ -29,7 +30,7 @@ export function AdminApp({ guests, tables }: { guests: Guest[]; tables: TableRow
                     <p className="mt-1 text-xs uppercase tracking-[0.4em] text-gold">Gestion des invités</p>
                 </div>
                 <div className="flex gap-2">
-                    <a href="/" className={btnGhost}>Voir le site</a>
+                    <Link href="/" className={btnGhost}>Voir le site</Link>
                     <form action={logout}><button className={btnGold}>Se déconnecter</button></form>
                 </div>
             </header>
