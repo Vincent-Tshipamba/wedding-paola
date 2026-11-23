@@ -1,25 +1,24 @@
 "use client";
-import Link from "next/link";
 import { useState } from "react";
-import { logout } from "@/app/admin/actions";
 import type { Guest, TableRow } from "@/db/schema";
-import { DRINKS } from "@/lib/config";
+import { logout } from "@/lib/admin-actions";
 import { btnGhost, btnGold } from "@/lib/admin-ui";
+import { DRINKS, drinkLabel } from "@/lib/config";
 import { GuestsPanel } from "./GuestsPanel";
 import { TablesPanel } from "./TablesPanel";
 
-const TABS = [["guests", "Guests"], ["tables", "Tables"], ["drinks", "Drinks"]] as const;
+const TABS = [["guests", "Invités"], ["tables", "Tables"], ["drinks", "Boissons"]] as const;
 
 export function AdminApp({ guests, tables }: { guests: Guest[]; tables: TableRow[] }) {
     const [tab, setTab] = useState<(typeof TABS)[number][0]>("guests");
     const active = guests.filter((g) => g.status !== "declined");
     const sum = (list: Guest[]) => list.reduce((a, g) => a + g.seats, 0);
-    const stats = [
+    const stats: [string, string | number][] = [
         ["Invitations", guests.length],
-        ["Expected seats", sum(active)],
-        ["Confirmed seats", sum(guests.filter((g) => g.status === "confirmed"))],
-        ["Pending", guests.filter((g) => g.status === "pending").length],
-        ["Seated", `${sum(active.filter((g) => g.tableId))}/${sum(active)}`],
+        ["Places attendues", sum(active)],
+        ["Places confirmées", sum(guests.filter((g) => g.status === "confirmed"))],
+        ["En attente", guests.filter((g) => g.status === "pending").length],
+        ["Placés", `${sum(active.filter((g) => g.tableId))}/${sum(active)}`],
     ];
 
     return (
@@ -27,11 +26,11 @@ export function AdminApp({ guests, tables }: { guests: Guest[]; tables: TableRow
             <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <p className="font-script text-5xl leading-none text-gold-soft">Paola &amp; Azarias</p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.4em] text-gold">Guest management</p>
+                    <p className="mt-1 text-xs uppercase tracking-[0.4em] text-gold">Gestion des invités</p>
                 </div>
                 <div className="flex gap-2">
-                    <Link href="/" className={btnGhost}>View site</Link>
-                    <form action={logout}><button className={btnGold}>Sign out</button></form>
+                    <a href="/" className={btnGhost}>Voir le site</a>
+                    <form action={logout}><button className={btnGold}>Se déconnecter</button></form>
                 </div>
             </header>
 
@@ -61,11 +60,11 @@ export function AdminApp({ guests, tables }: { guests: Guest[]; tables: TableRow
 
 function DrinksPanel({ guests }: { guests: Guest[] }) {
     const count = (d: string | null) => guests.filter((g) => g.drink === d).reduce((a, g) => a + g.seats, 0);
-    const rows = [...DRINKS.map((d) => [d as string, count(d)] as const), ["Not chosen yet", count(null)] as const];
+    const rows: [string, number][] = [...DRINKS.map((d): [string, number] => [drinkLabel(d, "fr"), count(d)]), ["Pas encore choisi", count(null)]];
     const max = Math.max(1, ...rows.map((r) => r[1]));
     return (
         <div className="max-w-xl space-y-3">
-            <p className="text-sm text-cream/60">Seats per drink choice (declined guests excluded). A guest&apos;s choice applies to all seats of their invitation.</p>
+            <p className="text-sm text-cream/60">Places par boisson (invités déclinés exclus). Le choix d&apos;un invité s&apos;applique à toutes les places de son invitation.</p>
             {rows.map(([name, n]) => (
                 <div key={name}>
                     <div className="mb-1 flex justify-between text-sm"><span>{name}</span><span className="text-gold-soft">{n}</span></div>
