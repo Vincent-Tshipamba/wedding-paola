@@ -8,7 +8,6 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = { title: "Admin — Paola & Azarias", robots: { index: false, follow: false } };
 
-// The admin is French only and lives outside [locale] (and outside next-intl): it has its own root layout.
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
     return (
         <html lang="fr" className={`${cormorant.variable} ${vibes.variable} ${inter.variable}`}>

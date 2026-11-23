@@ -1,5 +1,4 @@
 "use client";
-import { Link } from "@/src/i18n/navigation";
 import { useState } from "react";
 import type { Guest, TableRow } from "@/db/schema";
 import { logout } from "@/lib/admin-actions";
@@ -7,6 +6,7 @@ import { btnGhost, btnGold } from "@/lib/admin-ui";
 import { DRINKS, drinkLabel } from "@/lib/config";
 import { GuestsPanel } from "./GuestsPanel";
 import { TablesPanel } from "./TablesPanel";
+import Link from "next/link";
 
 const TABS = [["guests", "Invités"], ["tables", "Tables"], ["drinks", "Boissons"]] as const;
 
