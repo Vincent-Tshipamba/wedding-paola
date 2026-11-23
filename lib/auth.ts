@@ -9,7 +9,7 @@ function secret() {
   const s = process.env.AUTH_SECRET ?? "";
   if (s.length < 16)
     throw new Error(
-      "AUTH_SECRET must be set (6+ characters). See .env.example",
+      "AUTH_SECRET must be set (16+ characters). See .env.example",
     );
   return new TextEncoder().encode(s);
 }
