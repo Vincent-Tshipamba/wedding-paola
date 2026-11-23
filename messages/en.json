@@ -97,6 +97,31 @@
         "seats": "{count, plural, one {# seat reserved} other {# seats reserved}}",
         "table": "Your table: {name}",
         "tableSoon": "Your table will be announced soon.",
-        "scan": "Show this QR code at the entrance."
+        "scan": "Show this QR code at the entrance.",
+        "tapToOpen": "Touch to open",
+        "for": "For {name}",
+        "open": "Open the invitation",
+        "coverKicker": "The wedding of",
+        "photoCaption": "We can't wait to see you",
+        "confirm": "Confirm my presence",
+        "change": "Change my answer",
+        "visit": "Meet the couple",
+        "confirmed": "Presence confirmed",
+        "declined": "Absence noted",
+        "passTitle": "Your entrance pass",
+        "rsvp": {
+            "title": "Your answer",
+            "desc": "Let us know if you will be joining us.",
+            "yes": "With great pleasure",
+            "no": "With regret, I can't make it",
+            "drink": "Your drink",
+            "drinkNone": "No preference",
+            "submit": "Send my answer",
+            "saving": "Sending…",
+            "thanksYes": "Thank you! We can't wait to celebrate with you.",
+            "thanksNo": "Thank you for letting us know. You will be missed.",
+            "close": "Close",
+            "error": "Something went wrong, please try again."
+        }
     }
 }

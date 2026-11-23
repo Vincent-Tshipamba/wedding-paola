@@ -97,6 +97,31 @@
         "seats": "{count, plural, one {# place réservée} other {# places réservées}}",
         "table": "Votre table : {name}",
         "tableSoon": "Votre table vous sera communiquée prochainement.",
-        "scan": "Présentez ce QR code à l'entrée."
+        "scan": "Présentez ce QR code à l'entrée.",
+        "tapToOpen": "Touchez pour ouvrir",
+        "for": "Pour {name}",
+        "open": "Ouvrir l'invitation",
+        "coverKicker": "Le mariage de",
+        "photoCaption": "Nous avons hâte de vous retrouver",
+        "confirm": "Confirmer ma présence",
+        "change": "Modifier ma réponse",
+        "visit": "Découvrir les mariés",
+        "confirmed": "Présence confirmée",
+        "declined": "Absence indiquée",
+        "passTitle": "Votre pass d'entrée",
+        "rsvp": {
+            "title": "Votre réponse",
+            "desc": "Dites-nous si vous serez des nôtres.",
+            "yes": "Avec grand plaisir",
+            "no": "Avec regret, je ne pourrai pas venir",
+            "drink": "Votre boisson",
+            "drinkNone": "Pas de préférence",
+            "submit": "Envoyer ma réponse",
+            "saving": "Envoi…",
+            "thanksYes": "Merci ! Nous avons hâte de célébrer avec vous.",
+            "thanksNo": "Merci de nous avoir répondu. Vous nous manquerez.",
+            "close": "Fermer",
+            "error": "Une erreur est survenue, veuillez réessayer."
+        }
     }
 }
