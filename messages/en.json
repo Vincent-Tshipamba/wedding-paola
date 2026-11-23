@@ -1,7 +1,7 @@
 {
     "meta": {
-        "title": "Paola & Azarias — Our Wedding",
-        "description": "Join us in celebrating the wedding of Paola Odimba and Azarias Lubobo."
+        "title": "Azarias & Paola — Our Wedding",
+        "description": "Join us in celebrating the wedding of Azarias Mbiye and Paola Odimba."
     },
     "nav": {
         "home": "Home",
@@ -93,7 +93,7 @@
     },
     "invitation": {
         "kicker": "You are invited",
-        "text": "Paola and Azarias are delighted to invite you to celebrate their wedding.",
+        "text": "Azarias and Paola are delighted to invite you to celebrate their wedding.",
         "seats": "{count, plural, one {# seat reserved} other {# seats reserved}}",
         "table": "Your table: {name}",
         "tableSoon": "Your table will be announced soon.",

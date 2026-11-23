@@ -10,7 +10,7 @@ export type WeddingEvent = {
 };
 
 export const wedding = {
-  hashtag: "#PaolaEtAzarias",
+  hashtag: "#AzariasEtPaola",
   city: "Kinshasa", // TODO
   couple: {
     bride: {

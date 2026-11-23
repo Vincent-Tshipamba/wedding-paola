@@ -15,7 +15,7 @@ const Title = ({ kicker, children }: { kicker: string; children: React.ReactNode
 );
 
 export function Marquee() {
-    const item = `${wedding.couple.bride.firstName} & ${wedding.couple.groom.firstName}  ✦  24 · 01 · 2027  ✦  ${wedding.hashtag}  ✦  `;
+    const item = `${wedding.couple.groom.firstName} & ${wedding.couple.bride.firstName}  ✦  24 · 01 · 2027  ✦  ${wedding.hashtag}  ✦  `;
     return (
         <div className="overflow-hidden border-y border-gold/20 bg-crimson/20 py-4" aria-hidden>
             <div className="flex w-max animate-marquee whitespace-pre font-serif text-2xl text-gold-soft">
@@ -40,8 +40,8 @@ function Portrait({ src, initial }: { src: string; initial: string }) {
 export function Couple() {
     const t = useTranslations("couple");
     const people = [
-        { ...wedding.couple.bride, role: t("bride"), bio: t("bio.paola") },
         { ...wedding.couple.groom, role: t("groom"), bio: t("bio.azarias") },
+        { ...wedding.couple.bride, role: t("bride"), bio: t("bio.paola") },
     ];
     return (
         <section id="couple" className="mx-auto max-w-6xl px-6 py-32">

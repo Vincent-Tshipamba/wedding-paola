@@ -23,7 +23,7 @@ export function Hero() {
                     <p className="mb-6 text-xs uppercase tracking-[0.45em] text-gold sm:text-sm">{t("kicker")}</p>
                 </FadeContent>
                 <BlurText
-                    text={`${wedding.couple.bride.firstName} & ${wedding.couple.groom.firstName}`}
+                    text={`${wedding.couple.groom.firstName} & ${wedding.couple.bride.firstName}`}
                     delay={150}
                     animateBy="words"
                     direction="top"

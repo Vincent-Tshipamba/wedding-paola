@@ -1,7 +1,7 @@
 {
     "meta": {
-        "title": "Paola & Azarias — Notre mariage",
-        "description": "Rejoignez-nous pour célébrer le mariage de Paola Odimba et Azarias Lubobo."
+        "title": "Azarias & Paola — Notre mariage",
+        "description": "Rejoignez-nous pour célébrer le mariage de Azarias Mbiye et Paola Odimba."
     },
     "nav": {
         "home": "Accueil",
@@ -93,7 +93,7 @@
     },
     "invitation": {
         "kicker": "Vous êtes invité(e)",
-        "text": "Paola et Azarias ont la joie de vous convier à célébrer leur mariage.",
+        "text": "Azarias et Paola ont la joie de vous convier à célébrer leur mariage.",
         "seats": "{count, plural, one {# place réservée} other {# places réservées}}",
         "table": "Votre table : {name}",
         "tableSoon": "Votre table vous sera communiquée prochainement.",

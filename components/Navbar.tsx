@@ -88,7 +88,7 @@ export function Navbar() {
                 )}
             >
                 <a href="#home" className="font-script text-4xl leading-none text-gold" aria-label="Paola & Azarias">
-                    P &amp; A
+                    A &amp; P
                 </a>
 
                 {/* Desktop links */}
