@@ -29,7 +29,8 @@ export const guests = pgTable("guests", {
   }),
   notes: text("notes"),
   invitedAt: timestamp("invited_at", { withTimezone: true }), // when the invitation was sent
-  checkedInAt: timestamp("checked_in_at", { withTimezone: true }), // used by the door scanner (next step)
+  checkedInAt: timestamp("checked_in_at", { withTimezone: true }), // last entry time (door scanner)
+  arrived: integer("arrived").notNull().default(0), // how many of the reserved seats have entered
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),

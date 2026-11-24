@@ -8,8 +8,8 @@ import { guests, tables } from "@/db/schema";
 import {
   createSession,
   destroySession,
-  passwordMatches,
   requireAdmin,
+  roleForPassword,
 } from "@/lib/auth";
 import { DRINKS, STATUSES } from "@/lib/config";
 import { wedding } from "@/lib/wedding";
@@ -35,12 +35,13 @@ export async function login(
   _prev: { error?: string } | undefined,
   formData: FormData,
 ) {
-  if (!passwordMatches(String(formData.get("password") ?? ""))) {
+  const role = roleForPassword(String(formData.get("password") ?? ""));
+  if (!role) {
     await new Promise((r) => setTimeout(r, 700)); // slow down guessing
     return { error: "Mot de passe incorrect" };
   }
-  await createSession();
-  redirect("/admin");
+  await createSession(role);
+  redirect(role === "admin" ? "/admin" : "/admin/scan");
 }
 
 export async function logout() {

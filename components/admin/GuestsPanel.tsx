@@ -52,16 +52,16 @@ export function GuestsPanel({ guests, tables }: { guests: Guest[]; tables: Table
             </div>
 
             <div className="overflow-x-auto rounded-xl border border-gold/20">
-                <table className="w-full min-w-190 text-left text-sm">
+                <table className="w-full min-w-[760px] text-left text-sm">
                     <thead className="bg-surface text-[11px] uppercase tracking-[0.2em] text-gold">
                         <tr>{HEADERS.map((h, i) => <th key={i} className="px-4 py-3 font-medium">{h}</th>)}</tr>
                     </thead>
                     <tbody className="divide-y divide-gold/10">
                         {list.map((g) => (
-                            <tr key={g.id} className="hover:bg-white/3">
+                            <tr key={g.id} className="hover:bg-white/[0.03]">
                                 <td className="px-4 py-3">
                                     <p className="font-medium">{g.name}</p>
-                                    <p className="text-xs text-cream/50">{g.phone ?? g.email ?? ""}{g.invitedAt && " · invité"}{g.checkedInAt && " · présent"}</p>
+                                    <p className="text-xs text-cream/50">{g.phone ?? g.email ?? ""}{g.invitedAt && " · invité"}{g.arrived > 0 && ` · ${g.arrived}/${g.seats} présent${g.arrived > 1 ? "s" : ""}`}</p>
                                 </td>
                                 <td className="px-4 py-3">{g.seats}</td>
                                 <td className="px-4 py-3"><span className={`rounded-full px-2.5 py-1 text-xs ${BADGE[g.status]}`}>{STATUS_LABELS[g.status]}</span></td>

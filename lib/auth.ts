@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 const COOKIE = "admin_session";
+export type Role = "admin" | "scanner"; // scanner = door staff: can only use /admin/scan
 
 function secret() {
   const s = process.env.AUTH_SECRET ?? "";
@@ -14,15 +15,21 @@ function secret() {
   return new TextEncoder().encode(s);
 }
 
-export function passwordMatches(input: string) {
-  const expected = process.env.ADMIN_PASSWORD ?? "";
+function same(input: string, expected: string) {
   const a = Buffer.from(input);
   const b = Buffer.from(expected);
   return expected.length > 0 && a.length === b.length && timingSafeEqual(a, b);
 }
 
-export async function createSession() {
-  const token = await new SignJWT({ role: "admin" })
+/** Which role does this password unlock? (SCANNER_PASSWORD is optional.) */
+export function roleForPassword(input: string): Role | null {
+  if (same(input, process.env.ADMIN_PASSWORD ?? "")) return "admin";
+  if (same(input, process.env.SCANNER_PASSWORD ?? "")) return "scanner";
+  return null;
+}
+
+export async function createSession(role: Role) {
+  const token = await new SignJWT({ role })
     .setProtectedHeader({ alg: "HS256" })
     .setExpirationTime("7d")
     .sign(secret());
@@ -39,17 +46,35 @@ export async function destroySession() {
   (await cookies()).delete(COOKIE);
 }
 
-export async function isAdmin() {
+export async function getRole(): Promise<Role | null> {
   const token = (await cookies()).get(COOKIE)?.value;
-  if (!token) return false;
+  if (!token) return null;
   try {
-    await jwtVerify(token, secret());
-    return true;
+    const { payload } = await jwtVerify(token, secret());
+    return payload.role === "scanner"
+      ? "scanner"
+      : payload.role === "admin"
+        ? "admin"
+        : null;
   } catch {
-    return false;
+    return null;
   }
 }
 
+export async function isAdmin() {
+  return (await getRole()) === "admin";
+}
+
+/** Admin-only pages and actions. Door staff are sent to the scanner. */
 export async function requireAdmin() {
-  if (!(await isAdmin())) redirect("/admin/login");
+  const role = await getRole();
+  if (role === "admin") return;
+  redirect(role === "scanner" ? "/admin/scan" : "/admin/login");
+}
+
+/** Scanner page and actions: admin or door staff. */
+export async function requireStaff(): Promise<Role> {
+  const role = await getRole();
+  if (!role) redirect("/admin/login");
+  return role;
 }

@@ -20,6 +20,7 @@ export function AdminApp({ guests, tables }: { guests: Guest[]; tables: TableRow
         ["Places confirmées", sum(guests.filter((g) => g.status === "confirmed"))],
         ["En attente", guests.filter((g) => g.status === "pending").length],
         ["Placés", `${sum(active.filter((g) => g.tableId))}/${sum(active)}`],
+        ["Entrés", `${guests.reduce((a, g) => a + g.arrived, 0)}/${sum(active)}`],
     ];
 
     return (
@@ -30,12 +31,13 @@ export function AdminApp({ guests, tables }: { guests: Guest[]; tables: TableRow
                     <p className="mt-1 text-xs uppercase tracking-[0.4em] text-gold">Gestion des invités</p>
                 </div>
                 <div className="flex gap-2">
+                    <Link href="/admin/scan" className={btnGhost}>Contrôle d&apos;entrée</Link>
                     <Link href="/" className={btnGhost}>Voir le site</Link>
                     <form action={logout}><button className={btnGold}>Se déconnecter</button></form>
                 </div>
             </header>
 
-            <div className="mb-8 grid grid-cols-2 gap-3 md:grid-cols-5">
+            <div className="mb-8 grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
                 {stats.map(([label, value]) => (
                     <div key={label} className="rounded-xl border border-gold/20 bg-surface p-4">
                         <p className="font-serif text-4xl text-gold-soft">{value}</p>
