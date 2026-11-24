@@ -78,9 +78,9 @@ function Envelope({ phase, name, onOpen }: { phase: Phase; name: string; onOpen:
   const gold = "#d4af37";
   return (
     <motion.div exit={{ y: 180, opacity: 0, scale: 0.9, transition: { duration: 1, ease: EASE } }} className="flex flex-col items-center gap-10">
-      <motion.p initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, ease: EASE }} className="font-script text-4xl text-gold-soft sm:text-5xl">
+      {/* <motion.p initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, ease: EASE }} className="font-script text-4xl text-gold-soft sm:text-5xl">
         {t("for", { name })}
-      </motion.p>
+      </motion.p> */}
 
       <div
         role="button" tabIndex={0} aria-label={t("open")} aria-disabled={opened}
