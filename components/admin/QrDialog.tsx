@@ -12,8 +12,8 @@ export const inviteUrl = (g: Guest) => `${process.env.NEXT_PUBLIC_APP_URL || win
 // The message is written in the GUEST's language (set in their form), not the admin's.
 function message(g: Guest, url: string) {
     return g.locale === "en"
-        ? `Hello ${g.name}, Paola & Azarias are delighted to invite you to their wedding. Here is your personal invitation: ${url}`
-        : `Bonjour ${g.name}, Paola & Azarias ont la joie de vous inviter à leur mariage. Voici votre invitation personnelle : ${url}`;
+        ? `Hello ${g.name}, Azarias & Paola are delighted to invite you to their wedding. Here is your personal invitation: ${url}`
+        : `Bonjour ${g.name}, Azarias & Paola ont la joie de vous inviter à leur mariage. Voici votre invitation personnelle : ${url}`;
 }
 
 export function QrDialog({ guest, onClose }: { guest: Guest | null; onClose: () => void }) {
@@ -36,7 +36,7 @@ export function QrDialog({ guest, onClose }: { guest: Guest | null; onClose: () 
     if (!guest) return <Dialog open={false} />;
     const text = encodeURIComponent(message(guest, url));
     const wa = `https://wa.me/${(guest.phone ?? "").replace(/\D/g, "")}?text=${text}`;
-    const mail = `mailto:${guest.email ?? ""}?subject=${encodeURIComponent("Paola & Azarias")}&body=${text}`;
+    const mail = `mailto:${guest.email ?? ""}?subject=${encodeURIComponent("Azarias & Paola")}&body=${text}`;
     const sent = () => void markInvited(guest.id);
 
     return (
