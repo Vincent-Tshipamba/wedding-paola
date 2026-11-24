@@ -19,6 +19,18 @@ export function RsvpDialog({ open, onOpenChange, token, current, onSaved }: {
     const [drink, setDrink] = useState(current.drink ?? "");
     const [state, setState] = useState<"idle" | "saving" | "done" | "error">("idle");
 
+    // Every time the dialog opens, start fresh from the saved answer (no leftover thank-you message,
+    // no unsaved choice). Resetting state while rendering is React's recommended pattern for this.
+    const [prevOpen, setPrevOpen] = useState(open);
+    if (open !== prevOpen) {
+        setPrevOpen(open);
+        if (open) {
+            setState("idle");
+            setAttending(current.status === "pending" ? null : current.status === "confirmed");
+            setDrink(current.drink ?? "");
+        }
+    }
+
     const submit = async () => {
         if (attending === null) return;
         setState("saving");
