@@ -15,7 +15,37 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "meta" });
-  return { title: t("title"), description: t("description") };
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+  const url = `${baseUrl}/${locale}`;
+
+  return {
+    metadataBase: new URL(baseUrl),
+    title: t("title"),
+    description: t("description"),
+    alternates: { canonical: url },
+    openGraph: {
+      type: "website",
+      locale,
+      url,
+      title: t("title"),
+      description: t("description"),
+      siteName: "Azarias & Paola",
+      images: [
+        {
+          url: "/couple/together.jpeg",
+          width: 1120,
+          height: 746,
+          alt: locale === "fr" ? "Azarias et Paola ensemble" : "Azarias and Paola together",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("title"),
+      description: t("description"),
+      images: ["/couple/together.jpeg"],
+    },
+  };
 }
 
 export function generateStaticParams() {
