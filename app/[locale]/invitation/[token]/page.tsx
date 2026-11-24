@@ -21,7 +21,6 @@ export default function InvitationPage({ params }: { params: Promise<{ locale: s
 
 async function InvitationContent({ params }: { params: Promise<{ locale: string; token: string }> }) {
     const { locale, token } = await params;
-    console.log(token)
     const [guest] = await db.select().from(guests).where(eq(guests.token, token)).limit(1);
     if (!guest) notFound();
     const [table] = guest.tableId ? await db.select().from(tables).where(eq(tables.id, guest.tableId)) : [];
