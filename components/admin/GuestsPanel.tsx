@@ -1,19 +1,21 @@
 "use client";
 import { useMemo, useState, useTransition } from "react";
 import { Download, Pencil, Plus, QrCode, Search, Trash2 } from "lucide-react";
-import type { Guest, TableRow } from "@/db/schema";
+import type { EventSetting, Guest, TableRow } from "@/db/schema";
 import { deleteGuest } from "@/lib/admin-actions";
 import { btnGhost, btnGold, field } from "@/lib/admin-ui";
 import { EVENT_LABELS, STATUSES, STATUS_LABELS, drinkLabel } from "@/lib/config";
 import { GuestDialog } from "./GuestDialog";
 import { QrDialog, inviteUrl } from "./QrDialog";
+import { wedding } from "@/lib/wedding";
 
 const BADGE = { pending: "bg-gold/15 text-gold-soft", confirmed: "bg-emerald-500/15 text-emerald-300", declined: "bg-ember/15 text-ember" };
 const HEADERS = ["Invité", "Places", "Statut", "Boisson", "Table", "Cérémonies", ""];
 
-export function GuestsPanel({ guests, tables }: { guests: Guest[]; tables: TableRow[] }) {
+export function GuestsPanel({ guests, tables, settings }: { guests: Guest[]; tables: TableRow[]; settings: EventSetting[] }) {
     const [q, setQ] = useState("");
     const [status, setStatus] = useState("all");
+    const [eventFilter, setEventFilter] = useState("all");
     const [editing, setEditing] = useState<Guest | "new" | null>(null);
     const [qrGuest, setQrGuest] = useState<Guest | null>(null);
     const [, start] = useTransition();
@@ -22,8 +24,8 @@ export function GuestsPanel({ guests, tables }: { guests: Guest[]; tables: Table
 
     const list = useMemo(() => {
         const s = q.toLowerCase();
-        return guests.filter((g) => (status === "all" || g.status === status) && [g.name, g.phone, g.email].some((v) => v?.toLowerCase().includes(s)));
-    }, [guests, q, status]);
+        return guests.filter((g) => (status === "all" || g.status === status) && (eventFilter === "all" || g.events.includes(eventFilter)) && [g.name, g.phone, g.email].some((v) => v?.toLowerCase().includes(s)));
+    }, [guests, q, status, eventFilter]);
 
     function exportCsv() {
         const rows = [
@@ -47,21 +49,26 @@ export function GuestsPanel({ guests, tables }: { guests: Guest[]; tables: Table
                     <option value="all">Tous les statuts</option>
                     {STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}
                 </select>
+                <select value={eventFilter} onChange={(e) => setEventFilter(e.target.value)} className={`${field} w-auto`} aria-label="Filtrer par cérémonie">
+                    <option value="all">Toutes les cérémonies</option>
+                    {wedding.events.map((e) => <option key={e.id} value={e.id}>{EVENT_LABELS[e.id]}</option>)}
+                </select>
                 <button onClick={exportCsv} className={btnGhost}><Download className="size-4" />CSV</button>
                 <button onClick={() => setEditing("new")} className={btnGold}><Plus className="size-4" />Ajouter un invité</button>
             </div>
 
+            <p className="mb-3 text-sm text-cream/60">{list.length} invitation{list.length > 1 ? "s" : ""} · {list.reduce((a, g) => a + g.seats, 0)} place{list.reduce((a, g) => a + g.seats, 0) > 1 ? "s" : ""}{eventFilter !== "all" && ` · ${EVENT_LABELS[eventFilter]}`}</p>
             <div className="overflow-x-auto rounded-xl border border-gold/20">
-                <table className="w-full min-w-[760px] text-left text-sm">
+                <table className="w-full min-w-190 text-left text-sm">
                     <thead className="bg-surface text-[11px] uppercase tracking-[0.2em] text-gold">
                         <tr>{HEADERS.map((h, i) => <th key={i} className="px-4 py-3 font-medium">{h}</th>)}</tr>
                     </thead>
                     <tbody className="divide-y divide-gold/10">
                         {list.map((g) => (
-                            <tr key={g.id} className="hover:bg-white/[0.03]">
+                            <tr key={g.id} className="hover:bg-white/3">
                                 <td className="px-4 py-3">
                                     <p className="font-medium">{g.name}</p>
-                                    <p className="text-xs text-cream/50">{g.phone ?? g.email ?? ""}{g.invitedAt && " · invité"}{g.arrived > 0 && ` · ${g.arrived}/${g.seats} présent${g.arrived > 1 ? "s" : ""}`}</p>
+                                    <p className="text-xs text-cream/50">{g.companion !== "none" && "Couple · "}{g.phone ?? g.email ?? ""}{g.invitedAt && " · invité"}{g.arrived > 0 && ` · ${g.arrived}/${g.seats} présent${g.arrived > 1 ? "s" : ""}`}</p>
                                 </td>
                                 <td className="px-4 py-3">{g.seats}</td>
                                 <td className="px-4 py-3"><span className={`rounded-full px-2.5 py-1 text-xs ${BADGE[g.status]}`}>{STATUS_LABELS[g.status]}</span></td>
@@ -82,7 +89,7 @@ export function GuestsPanel({ guests, tables }: { guests: Guest[]; tables: Table
                 </table>
             </div>
 
-            <GuestDialog key={editing === "new" ? "new" : editing?.id ?? "none"} guest={editing === "new" ? null : editing} open={editing !== null} onClose={() => setEditing(null)} tables={tables} guests={guests} />
+            <GuestDialog key={editing === "new" ? "new" : editing?.id ?? "none"} guest={editing === "new" ? null : editing} open={editing !== null} onClose={() => setEditing(null)} tables={tables} guests={guests} settings={settings} />
             <QrDialog guest={qrGuest} onClose={() => setQrGuest(null)} />
         </div>
     );

@@ -1,7 +1,7 @@
 "use client";
 import { useState, useTransition } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import type { Guest, TableRow } from "@/db/schema";
+import type { EventSetting, Guest, TableRow } from "@/db/schema";
 import { saveGuest, type GuestInput } from "@/lib/admin-actions";
 import { btnGhost, btnGold, field } from "@/lib/admin-ui";
 import { DRINKS, EVENT_LABELS, STATUSES, STATUS_LABELS, drinkLabel } from "@/lib/config";
@@ -11,9 +11,10 @@ const Field = ({ label, children }: { label: string; children: React.ReactNode }
     <label className="block space-y-1.5 text-xs uppercase tracking-[0.15em] text-gold">{label}{children}</label>
 );
 
-export function GuestDialog({ guest, open, onClose, tables, guests }: { guest: Guest | null; open: boolean; onClose: () => void; tables: TableRow[]; guests: Guest[] }) {
+export function GuestDialog({ guest, open, onClose, tables, guests, settings }: { guest: Guest | null; open: boolean; onClose: () => void; tables: TableRow[]; guests: Guest[]; settings: EventSetting[] }) {
     const [f, setF] = useState<GuestInput>({
         id: guest?.id, name: guest?.name ?? "", phone: guest?.phone ?? "", email: guest?.email ?? "", seats: guest?.seats ?? 1,
+        companion: guest?.companion ?? "none",
         locale: guest?.locale ?? "fr", status: guest?.status ?? "pending", drink: guest?.drink ?? "", tableId: guest?.tableId ?? null,
         events: guest?.events ?? wedding.events.map((e) => e.id), notes: guest?.notes ?? "",
     });
@@ -21,6 +22,14 @@ export function GuestDialog({ guest, open, onClose, tables, guests }: { guest: G
     const [pending, start] = useTransition();
     const set = <K extends keyof GuestInput>(k: K, v: GuestInput[K]) => setF((p) => ({ ...p, [k]: v }));
     const free = (t: TableRow) => t.capacity - guests.filter((g) => g.tableId === t.id && g.id !== guest?.id && g.status !== "declined").reduce((a, g) => a + g.seats, 0);
+    const eventLeft = (id: string) => {
+        const cap = settings.find((s) => s.id === id)?.capacity;
+        if (!cap) return null;
+        return cap - guests.filter((g) => g.id !== guest?.id && g.status !== "declined" && g.events.includes(id)).reduce((a, g) => a + g.seats, 0);
+    };
+
+    const setCompanion = (c: GuestInput["companion"]) =>
+        setF((p) => ({ ...p, companion: c, seats: c === "none" ? (p.seats === 2 ? 1 : p.seats) : Math.max(p.seats, 2) }));
 
     const submit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -40,28 +49,38 @@ export function GuestDialog({ guest, open, onClose, tables, guests }: { guest: G
                 <form onSubmit={submit} className="space-y-4">
                     <Field label="Nom *"><input required value={f.name} onChange={(e) => set("name", e.target.value)} className={field} /></Field>
                     <div className="grid grid-cols-2 gap-3">
+                        <Field label="Type d'invitation">
+                            <select value={f.companion} onChange={(e) => setCompanion(e.target.value as GuestInput["companion"])} className={field}>
+                                <option value="none">Personne seule</option>
+                                <option value="wife">Couple : avec son épouse</option>
+                                <option value="husband">Couple : avec son époux</option>
+                            </select>
+                        </Field>
+                        <Field label="Places"><input type="number" min={f.companion === "none" ? 1 : 2} max={4} value={f.seats} onChange={(e) => set("seats", Number(e.target.value))} className={field} /></Field>
                         <Field label="Téléphone (WhatsApp)"><input value={f.phone} onChange={(e) => set("phone", e.target.value)} placeholder="+243…" className={field} /></Field>
                         <Field label="E-mail"><input type="email" value={f.email} onChange={(e) => set("email", e.target.value)} className={field} /></Field>
-                        <Field label="Places (accompagnants inclus)"><input type="number" min={1} max={20} value={f.seats} onChange={(e) => set("seats", Number(e.target.value))} className={field} /></Field>
                         <Field label="Langue de l'invitation"><select value={f.locale} onChange={(e) => set("locale", e.target.value as "fr" | "en")} className={field}><option value="fr">Français</option><option value="en">English</option></select></Field>
                         <Field label="Statut"><select value={f.status} onChange={(e) => set("status", e.target.value as GuestInput["status"])} className={field}>{STATUSES.map((s) => <option key={s} value={s}>{STATUS_LABELS[s]}</option>)}</select></Field>
                         <Field label="Boisson"><select value={f.drink} onChange={(e) => set("drink", e.target.value)} className={field}><option value="">—</option>{DRINKS.map((d) => <option key={d} value={d}>{drinkLabel(d, "fr")}</option>)}</select></Field>
+                        <Field label="Table">
+                            <select value={f.tableId ?? ""} onChange={(e) => set("tableId", e.target.value ? Number(e.target.value) : null)} className={field}>
+                                <option value="">Non assignée</option>
+                                {tables.map((t) => <option key={t.id} value={t.id}>{t.name} — {free(t)} libres</option>)}
+                            </select>
+                        </Field>
                     </div>
-                    <Field label="Table">
-                        <select value={f.tableId ?? ""} onChange={(e) => set("tableId", e.target.value ? Number(e.target.value) : null)} className={field}>
-                            <option value="">Non assignée</option>
-                            {tables.map((t) => <option key={t.id} value={t.id}>{t.name} — {free(t)} libres</option>)}
-                        </select>
-                    </Field>
                     <fieldset className="space-y-2">
                         <legend className="text-xs uppercase tracking-[0.15em] text-gold">Invité à</legend>
-                        <div className="flex flex-wrap gap-4">
-                            {wedding.events.map((e) => (
-                                <label key={e.id} className="flex items-center gap-2 text-sm">
-                                    <input type="checkbox" checked={f.events.includes(e.id)} onChange={(ev) => set("events", ev.target.checked ? [...f.events, e.id] : f.events.filter((x) => x !== e.id))} className="accent-gold" />
-                                    {EVENT_LABELS[e.id]}
-                                </label>
-                            ))}
+                        <div className="grid gap-2 sm:grid-cols-2">
+                            {wedding.events.map((e) => {
+                                const left = eventLeft(e.id);
+                                return (
+                                    <label key={e.id} className="flex items-center gap-2 text-sm">
+                                        <input type="checkbox" checked={f.events.includes(e.id)} onChange={(ev) => set("events", ev.target.checked ? [...f.events, e.id] : f.events.filter((x) => x !== e.id))} className="accent-gold" />
+                                        <span>{EVENT_LABELS[e.id]}{left !== null && <span className={left < f.seats ? "text-ember" : "text-cream/40"}> · {left} libres</span>}</span>
+                                    </label>
+                                );
+                            })}
                         </div>
                     </fieldset>
                     <Field label="Notes"><textarea rows={2} value={f.notes} onChange={(e) => set("notes", e.target.value)} className={field} /></Field>

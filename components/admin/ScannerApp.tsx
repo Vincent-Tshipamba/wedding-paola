@@ -1,10 +1,11 @@
 "use client";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import jsQR from "jsqr";
-import { Camera, CameraOff, Minus, Plus, Search, Undo2 } from "lucide-react";
+import { Camera, CameraOff, Minus, Plus, RefreshCw, Search, Undo2, WifiOff } from "lucide-react";
 import { logout } from "@/lib/admin-actions";
 import { btnGhost, btnGold, field } from "@/lib/admin-ui";
-import { confirmEntry, scanToken, searchGuests, undoEntry, type ScanGuest, type ScanResult, type Totals } from "@/lib/scan-actions";
+import { confirmLocal, decideLocal, loadQueue, loadRoster, saveQueue, saveRoster, searchLocal, totalsLocal, uid, undoLocal } from "@/lib/door-offline";
+import { confirmEntry, getRoster, scanToken, searchGuests, syncOps, undoEntry, type Op, type ScanGuest, type ScanResult, type Totals } from "@/lib/scan-actions";
 import Link from "next/link";
 
 type Tone = "ok" | "warn" | "bad";
@@ -13,6 +14,28 @@ type LogItem = { id: number; time: string; text: string; tone: Tone };
 
 const hhmm = (d: Date | string) => new Date(d).toLocaleTimeString("fr-FR", { hour: "2-digit", minute: "2-digit" });
 const TONE: Record<Tone, string> = { ok: "border-emerald-400/50 bg-emerald-500/10", warn: "border-gold/60 bg-gold/10", bad: "border-ember/60 bg-ember/10" };
+
+// ----- online / offline -----
+const subscribe = (cb: () => void) => {
+    window.addEventListener("online", cb);
+    window.addEventListener("offline", cb);
+    return () => { window.removeEventListener("online", cb); window.removeEventListener("offline", cb); };
+};
+const useOnline = () => useSyncExternalStore(subscribe, () => navigator.onLine, () => true);
+
+function withTimeout<T>(p: Promise<T>, ms = 5000) {
+    return new Promise<T>((resolve, reject) => {
+        const t = setTimeout(() => reject(new Error("timeout")), ms);
+        p.then((v) => { clearTimeout(t); resolve(v); }, (e) => { clearTimeout(t); reject(e); });
+    });
+}
+// Try the server first (it is the source of truth); if there is no connection, decide locally and queue the action.
+async function withFallback<T>(onlineFn: () => Promise<T>, offlineFn: () => T): Promise<T> {
+    if (navigator.onLine) {
+        try { return await withTimeout(onlineFn()); } catch { /* fall through to offline mode */ }
+    }
+    return offlineFn();
+}
 
 // ----- sound + vibration (the audio context must be created after a tap) -----
 let audio: AudioContext | null = null;
@@ -48,7 +71,7 @@ function describe(v: View): { tone: Tone; title: string; guest?: ScanGuest } {
         case "choose": return { tone: "warn", title: "Combien de personnes entrent ?", guest: v.guest };
         case "declined": return { tone: "bad", title: "A décliné l'invitation", guest: v.guest };
         case "unknown": return { tone: "bad", title: "QR code invalide" };
-        default: return { tone: "bad", title: "Connexion perdue : réessayez" };
+        default: return { tone: "bad", title: "Erreur : réessayez" };
     }
 }
 
@@ -59,7 +82,10 @@ export function ScannerApp({ initialTotals, isAdmin }: { initialTotals: Totals; 
     const busy = useRef(false); // true while a result is on screen / being handled
     const last = useRef({ token: "", at: 0 });
     const searchTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
+    const rosterRef = useRef<ScanGuest[]>([]); // local copy of the guest list
+    const syncing = useRef(false);
 
+    const online = useOnline();
     const [active, setActive] = useState(false);
     const [camError, setCamError] = useState("");
     const [view, setView] = useState<View | null>(null);
@@ -69,10 +95,76 @@ export function ScannerApp({ initialTotals, isAdmin }: { initialTotals: Totals; 
     const [q, setQ] = useState("");
     const [hits, setHits] = useState<ScanGuest[]>([]);
     const [log, setLog] = useState<LogItem[]>([]);
+    const [pending, setPending] = useState(0); // actions waiting to be sent
+    const [rosterCount, setRosterCount] = useState(0);
+    const [notice, setNotice] = useState("");
+    const [sw, setSw] = useState<"off" | "reload" | "ready">("off");
 
     const addLog = (text: string, tone: Tone) =>
         setLog((l) => [{ id: Date.now() + Math.random(), time: hhmm(new Date()), text, tone }, ...l].slice(0, 8));
 
+    // ---- local copy + queue ----
+    const setRoster = useCallback((r: ScanGuest[]) => { rosterRef.current = r; saveRoster(r); setRosterCount(r.length); }, []);
+    const patchRoster = useCallback((g: ScanGuest) => setRoster(rosterRef.current.map((x) => (x.token === g.token ? g : x))), [setRoster]);
+    const enqueue = useCallback((op?: Op) => {
+        if (!op) return;
+        const queue = [...loadQueue(), op];
+        saveQueue(queue);
+        setPending(queue.length);
+    }, []);
+    const refreshRoster = useCallback(async () => {
+        if (loadQueue().length) return; // don't overwrite local entries that are still waiting to be sent
+        try { setRoster(await getRoster()); } catch { /* offline: keep the local copy */ }
+    }, [setRoster]);
+
+    const flush = useCallback(async () => {
+        if (syncing.current || !navigator.onLine) return;
+        const queue = loadQueue();
+        if (!queue.length) return;
+        syncing.current = true;
+        try {
+            const r = await syncOps(queue);
+            const done = new Set(r.done);
+            const rest = loadQueue().filter((o) => !done.has(o.id));
+            saveQueue(rest);
+            setPending(rest.length);
+            setTotals(r.totals);
+            if (r.conflicts.length) setNotice(`Déjà entré(s) ailleurs pendant la coupure : ${r.conflicts.join(", ")}`);
+            if (!rest.length) await refreshRoster();
+        } catch {
+            /* still no connection: try again later */
+        } finally {
+            syncing.current = false;
+        }
+    }, [refreshRoster]);
+
+    useEffect(() => {
+        queueMicrotask(() => {
+            setRoster(loadRoster());
+            setPending(loadQueue().length);
+            void refreshRoster();
+            void flush();
+        });
+        const sync = setInterval(() => void flush(), 15000);
+        const roster = setInterval(() => { if (navigator.onLine) void refreshRoster(); }, 60000);
+        const onOnline = () => void flush();
+        window.addEventListener("online", onOnline);
+        return () => { clearInterval(sync); clearInterval(roster); window.removeEventListener("online", onOnline); };
+    }, [flush, refreshRoster, setRoster]);
+
+    // service worker (production only): lets this page reopen with no internet
+    useEffect(() => {
+        if (process.env.NODE_ENV !== "production" || !("serviceWorker" in navigator)) return;
+        navigator.serviceWorker.register("/sw.js")
+            .then(() => navigator.serviceWorker.ready)
+            .then(() => setSw(navigator.serviceWorker.controller ? "ready" : "reload"))
+            .catch(() => setSw("off"));
+        const onChange = () => setSw("ready");
+        navigator.serviceWorker.addEventListener("controllerchange", onChange);
+        return () => navigator.serviceWorker.removeEventListener("controllerchange", onChange);
+    }, []);
+
+    // ---- showing a result ----
     const show = useCallback((r: View, t?: Totals) => {
         const d = describe(r);
         setView(r);
@@ -90,15 +182,19 @@ export function ScannerApp({ initialTotals, isAdmin }: { initialTotals: Totals; 
     const handleToken = useCallback(async (token: string) => {
         busy.current = true;
         setLoading(true);
+        const opId = uid();
         try {
-            const { result, totals: t } = await scanToken(token);
-            show(result, t);
+            const out = await withFallback(
+                async () => { const r = await scanToken(token, opId); if ("guest" in r.result) patchRoster(r.result.guest); return r; },
+                () => { const r = decideLocal(rosterRef.current, token, opId); setRoster(r.roster); enqueue(r.op); return { result: r.result, totals: totalsLocal(r.roster) }; },
+            );
+            show(out.result, out.totals);
         } catch {
             show({ kind: "error" });
         } finally {
             setLoading(false);
         }
-    }, [show]);
+    }, [show, patchRoster, setRoster, enqueue]);
 
     // ---- camera ----
     const stopCamera = useCallback(() => {
@@ -162,28 +258,44 @@ export function ScannerApp({ initialTotals, isAdmin }: { initialTotals: Totals; 
     const confirm = async (force = false) => {
         if (!view || !("guest" in view)) return;
         setLoading(true);
+        const g = view.guest;
+        const n = force ? g.seats - g.arrived : count;
+        const opId = uid();
         try {
-            const n = force ? view.guest.seats - view.guest.arrived : count;
-            const { result, totals: t } = await confirmEntry(view.guest.token, n, force);
-            show(result, t);
+            const out = await withFallback(
+                async () => { const r = await confirmEntry(g.token, n, force, opId); if ("guest" in r.result) patchRoster(r.result.guest); return r; },
+                () => { const r = confirmLocal(rosterRef.current, g.token, n, force, opId); setRoster(r.roster); enqueue(r.op); return { result: r.result, totals: totalsLocal(r.roster) }; },
+            );
+            show(out.result, out.totals);
         } catch {
             show({ kind: "error" });
         } finally {
             setLoading(false);
         }
     };
+
     const undo = async () => {
         if (view?.kind !== "ok") return;
         setLoading(true);
+        const { guest, entered } = view;
+        const opId = uid();
         try {
-            setTotals(await undoEntry(view.guest.token, view.entered));
-            addLog(`${view.guest.name}: entrée annulée`, "warn");
+            const t = await withFallback(
+                async () => { const r = await undoEntry(guest.token, entered, opId); return r; },
+                () => { const r = undoLocal(rosterRef.current, guest.token, entered, opId); setRoster(r.roster); enqueue(r.op); return totalsLocal(r.roster); },
+            );
+            setTotals(t);
+            if (online) void refreshRoster();
+            addLog(`${guest.name}: entrée annulée`, "warn");
             setView(null);
             busy.current = false;
+        } catch {
+            show({ kind: "error" });
         } finally {
             setLoading(false);
         }
     };
+
     const dismiss = () => { setView(null); busy.current = false; };
 
     const onSearch = (value: string) => {
@@ -191,7 +303,7 @@ export function ScannerApp({ initialTotals, isAdmin }: { initialTotals: Totals; 
         clearTimeout(searchTimer.current);
         if (value.trim().length < 2) { setHits([]); return; }
         searchTimer.current = setTimeout(async () => {
-            try { setHits(await searchGuests(value)); } catch { setHits([]); }
+            setHits(await withFallback(() => searchGuests(value), () => searchLocal(rosterRef.current, value)).catch(() => searchLocal(rosterRef.current, value)));
         }, 300);
     };
     const pick = (g: ScanGuest) => { setHits([]); setQ(""); warmAudio(); void handleToken(g.token); };
@@ -201,7 +313,7 @@ export function ScannerApp({ initialTotals, isAdmin }: { initialTotals: Totals; 
 
     return (
         <div className="mx-auto max-w-5xl px-4 py-6 sm:px-6">
-            <header className="mb-6 flex flex-wrap items-center justify-between gap-3">
+            <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
                 <div>
                     <p className="font-script text-4xl leading-none text-gold-soft">Contrôle d&apos;entrée</p>
                     <p className="mt-1 text-xs uppercase tracking-[0.4em] text-gold">Azarias &amp; Paola</p>
@@ -212,13 +324,33 @@ export function ScannerApp({ initialTotals, isAdmin }: { initialTotals: Totals; 
                         <p className="text-[10px] uppercase tracking-[0.2em] text-cream/60">Entrés</p>
                     </div>
                     {isAdmin && <Link href="/admin" className={btnGhost}>Admin</Link>}
-                    <form action={logout}>
-                        <button className={btnGhost}>
-                            Quitter
-                        </button>
-                    </form>
+                    <form action={logout}><button className={btnGhost}>Quitter</button></form>
                 </div>
             </header>
+
+            {/* connection status */}
+            {(!online || pending > 0) && (
+                <div role="status" className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-gold/40 bg-gold/10 px-4 py-3 text-sm">
+                    <span className="flex items-center gap-2">
+                        {!online && <WifiOff className="size-4 shrink-0" />}
+                        {!online
+                            ? `Hors ligne : les entrées sont enregistrées sur cet appareil et seront envoyées automatiquement au retour du réseau${pending ? ` (${pending} en attente)` : ""}.`
+                            : `${pending} entrée${pending > 1 ? "s" : ""} à envoyer…`}
+                    </span>
+                    {online && <button onClick={() => void flush()} className={btnGhost}><RefreshCw className="size-4" />Synchroniser</button>}
+                </div>
+            )}
+            {notice && (
+                <div role="alert" className="mb-4 flex items-start justify-between gap-3 rounded-xl border border-ember/50 bg-ember/10 px-4 py-3 text-sm">
+                    <span>{notice}</span>
+                    <button onClick={() => setNotice("")} className="text-xs underline">OK</button>
+                </div>
+            )}
+            <p className="mb-4 text-xs text-cream/40">
+                Liste locale : {rosterCount} invitation{rosterCount > 1 ? "s" : ""}
+                {sw === "ready" && " · prêt pour le mode hors ligne ✓"}
+                {sw === "reload" && " · rechargez la page une fois pour activer le mode hors ligne"}
+            </p>
 
             <div className="grid gap-6 md:grid-cols-2">
                 {/* camera */}

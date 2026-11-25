@@ -19,6 +19,9 @@ export const guests = pgTable("guests", {
   status: text("status", { enum: ["pending", "confirmed", "declined"] })
     .notNull()
     .default("pending"),
+  companion: text("companion", { enum: ["none", "wife", "husband"] })
+    .notNull()
+    .default("none"), // couple invitation: who comes with the guest
   drink: text("drink"),
   events: jsonb("events")
     .$type<string[]>()
@@ -36,5 +39,24 @@ export const guests = pgTable("guests", {
     .defaultNow(),
 });
 
+// Per-ceremony settings edited in the admin "Événements" tab.
+export const eventSettings = pgTable("event_settings", {
+  id: text("id").primaryKey(), // "customary" | "civil" | "talk" | "party"
+  capacity: integer("capacity"), // max seats for this event (null = no limit)
+  dressCodeFr: text("dress_code_fr"),
+  dressCodeEn: text("dress_code_en"),
+});
+
+// One row per door entry/undo. The id comes from the scanner, so a replayed offline sync can't count twice.
+export const checkins = pgTable("checkins", {
+  id: text("id").primaryKey(),
+  guestId: integer("guest_id")
+    .notNull()
+    .references(() => guests.id, { onDelete: "cascade" }),
+  delta: integer("delta").notNull(),
+  at: timestamp("at", { withTimezone: true }).notNull().defaultNow(),
+});
+
 export type Guest = typeof guests.$inferSelect;
 export type TableRow = typeof tables.$inferSelect;
+export type EventSetting = typeof eventSettings.$inferSelect;

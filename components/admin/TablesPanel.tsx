@@ -22,8 +22,8 @@ export function TablesPanel({ guests, tables }: { guests: Guest[]; tables: Table
     return (
         <div>
             <form onSubmit={add} className="mb-6 flex flex-wrap items-end gap-3">
-                <label className="space-y-1.5 text-xs uppercase tracking-[0.15em] text-gold">Nom de la table<input required value={name} onChange={(e) => setName(e.target.value)} placeholder="ex. Table 1 ou Famille" className={`${field} w-56`} /></label>
-                <label className="space-y-1.5 text-xs uppercase tracking-[0.15em] text-gold">Places<input type="number" min={1} max={50} value={capacity} onChange={(e) => setCapacity(Number(e.target.value))} className={`${field} w-24`} /></label>
+                <label className="space-y-1.5 text-xs uppercase tracking-[0.15em] text-gold">Nom de la table<input required value={name} onChange={(e) => setName(e.target.value)} placeholder="ex. Table 1" className={`${field} w-56`} /></label>
+                <label className="space-y-1.5 text-xs uppercase tracking-[0.15em] text-gold">Places<input type="number" min={1} max={10} value={capacity} onChange={(e) => setCapacity(Number(e.target.value))} className={`${field} w-24`} /></label>
                 <button className={btnGold}><Plus className="size-4" />Ajouter une table</button>
                 {error && <p role="alert" className="w-full text-sm text-ember">{error}</p>}
             </form>
@@ -49,7 +49,7 @@ function TableCard({ table, guests }: { table: TableRow; guests: Guest[] }) {
             {edit ? (
                 <div className="space-y-2">
                     <input value={name} onChange={(e) => setName(e.target.value)} className={field} />
-                    <input type="number" min={1} max={50} value={capacity} onChange={(e) => setCapacity(Number(e.target.value))} className={field} />
+                    <input type="number" min={1} max={10} value={capacity} onChange={(e) => setCapacity(Number(e.target.value))} className={field} />
                     {error && <p className="text-xs text-ember">{error}</p>}
                     <div className="flex gap-2">
                         <button aria-label="Enregistrer" onClick={() => start(async () => { const r = await saveTable({ id: table.id, name, capacity }); if (r.ok) setEdit(false); else setError(r.error); })} className={btnGold}><Check className="size-4" /></button>
@@ -62,11 +62,12 @@ function TableCard({ table, guests }: { table: TableRow; guests: Guest[] }) {
                         <h3 className="font-serif text-2xl text-gold-soft">{table.name}</h3>
                         <div className="flex gap-1">
                             <button aria-label="Modifier la table" onClick={() => setEdit(true)} className={btnGhost}><Pencil className="size-4" /></button>
-                            <button aria-label="Supprimer la table" onClick={() => confirm(`Supprimer ${table.name} ? Ses invités ne seront plus placés.`) && start(async () => { await deleteTable(table.id); })} className={btnGhost}><Trash2 className="size-4" /></button>
+                            <button aria-label="Supprimer la table" disabled={guests.length > 0} title={guests.length > 0 ? "Réassignez d'abord ses invités à une autre table" : "Supprimer la table"} onClick={() => confirm(`Supprimer ${table.name} ?`) && start(async () => { const r = await deleteTable(table.id); if (!r.ok) setError(r.error); })} className={btnGhost}><Trash2 className="size-4" /></button>
                         </div>
                     </div>
                     <p className="mt-2 text-sm text-cream/60">{used} / {table.capacity} places</p>
                     <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-white/10"><div className={`h-full rounded-full ${pct >= 100 ? "bg-ember" : "bg-gold"}`} style={{ width: `${pct}%` }} /></div>
+                    {error && <p role="alert" className="mt-2 text-xs text-ember">{error}</p>}
                     <ul className="mt-4 space-y-1 text-sm text-cream/80">
                         {guests.map((g) => <li key={g.id} className={g.status === "declined" ? "line-through opacity-40" : ""}>{g.name}{g.seats > 1 && <span className="text-cream/40"> +{g.seats - 1}</span>}</li>)}
                     </ul>

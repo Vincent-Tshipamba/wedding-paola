@@ -1,16 +1,17 @@
 "use client";
 import { useState } from "react";
-import type { Guest, TableRow } from "@/db/schema";
+import type { EventSetting, Guest, TableRow } from "@/db/schema";
 import { logout } from "@/lib/admin-actions";
 import { btnGhost, btnGold } from "@/lib/admin-ui";
 import { DRINKS, drinkLabel } from "@/lib/config";
+import { EventsPanel } from "./EventsPanel";
 import { GuestsPanel } from "./GuestsPanel";
 import { TablesPanel } from "./TablesPanel";
 import Link from "next/link";
 
-const TABS = [["guests", "Invités"], ["tables", "Tables"], ["drinks", "Boissons"]] as const;
+const TABS = [["guests", "Invités"], ["events", "Événements"], ["tables", "Tables"], ["drinks", "Boissons"]] as const;
 
-export function AdminApp({ guests, tables }: { guests: Guest[]; tables: TableRow[] }) {
+export function AdminApp({ guests, tables, settings }: { guests: Guest[]; tables: TableRow[]; settings: EventSetting[] }) {
     const [tab, setTab] = useState<(typeof TABS)[number][0]>("guests");
     const active = guests.filter((g) => g.status !== "declined");
     const sum = (list: Guest[]) => list.reduce((a, g) => a + g.seats, 0);
@@ -27,7 +28,7 @@ export function AdminApp({ guests, tables }: { guests: Guest[]; tables: TableRow
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
             <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <p className="font-script text-5xl leading-none text-gold-soft">Paola &amp; Azarias</p>
+                    <p className="font-script text-5xl leading-none text-gold-soft">Azarias &amp; Paola</p>
                     <p className="mt-1 text-xs uppercase tracking-[0.4em] text-gold">Gestion des invités</p>
                 </div>
                 <div className="flex gap-2">
@@ -54,7 +55,8 @@ export function AdminApp({ guests, tables }: { guests: Guest[]; tables: TableRow
                 ))}
             </div>
 
-            {tab === "guests" && <GuestsPanel guests={guests} tables={tables} />}
+            {tab === "guests" && <GuestsPanel guests={guests} tables={tables} settings={settings} />}
+            {tab === "events" && <EventsPanel guests={guests} settings={settings} />}
             {tab === "tables" && <TablesPanel guests={guests} tables={tables} />}
             {tab === "drinks" && <DrinksPanel guests={active} />}
         </div>

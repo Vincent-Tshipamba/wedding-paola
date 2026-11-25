@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import type { Guest } from "@/db/schema";
 import { markInvited } from "@/lib/admin-actions";
 import { btnGhost } from "@/lib/admin-ui";
+import Link from "next/link";
 
 export const inviteUrl = (g: Guest) => `${process.env.NEXT_PUBLIC_APP_URL || window.location.origin}/${g.locale}/invitation/${g.token}`;
 
@@ -51,14 +52,14 @@ export function QrDialog({ guest, onClose }: { guest: Guest | null; onClose: () 
                     {qr && <img src={qr} alt={`QR code de ${guest.name}`} className="size-full" />}
                 </div>
                 <div className="grid grid-cols-2 gap-2">
-                    <a href={wa} target="_blank" rel="noreferrer" onClick={sent} className={btnGhost}><MessageCircle className="size-4" />WhatsApp</a>
-                    <a href={mail} onClick={sent} className={btnGhost}><Mail className="size-4" />E-mail</a>
+                    <Link href={wa} target="_blank" rel="noreferrer" onClick={sent} className={btnGhost}><MessageCircle className="size-4" />WhatsApp</Link>
+                    <Link href={mail} onClick={sent} className={btnGhost}><Mail className="size-4" />E-mail</Link>
                     <button onClick={async () => { await navigator.clipboard.writeText(url); setCopied(true); setTimeout(() => setCopied(false), 1500); }} className={btnGhost}>
                         {copied ? <Check className="size-4" /> : <Copy className="size-4" />}{copied ? "Copié" : "Copier le lien"}
                     </button>
-                    <a href={qr} download={`qr-${guest.name.replace(/\s+/g, "-").toLowerCase()}.png`} className={btnGhost}><Download className="size-4" />PNG</a>
+                    <Link href={qr} download={`qr-${guest.name.replace(/\s+/g, "-").toLowerCase()}.png`} className={btnGhost}><Download className="size-4" />PNG</Link>
                 </div>
-                <a href={url} target="_blank" rel="noreferrer" className="text-xs text-gold underline-offset-4 hover:underline">Aperçu de l&apos;invitation</a>
+                <Link href={url} target="_blank" rel="noreferrer" className="text-xs text-gold underline-offset-4 hover:underline">Aperçu de l&apos;invitation</Link>
             </DialogContent>
         </Dialog>
     );
