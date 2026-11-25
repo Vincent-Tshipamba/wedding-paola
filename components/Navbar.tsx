@@ -7,6 +7,7 @@ import { Menu } from "lucide-react";
 import { Sheet, SheetClose, SheetContent, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "@/src/i18n/navigation";
+import Link from "next/link";
 
 const LINKS = ["home", "couple", "together", "story", "events", "gallery"] as const;
 type SectionId = (typeof LINKS)[number];
@@ -32,7 +33,7 @@ function useActiveSection() {
 
 function NavLink({ href, label, active }: { href: string; label: string; active: boolean }) {
     return (
-        <a
+        <Link
             href={href}
             aria-current={active ? "location" : undefined}
             className={cn(
@@ -51,7 +52,7 @@ function NavLink({ href, label, active }: { href: string; label: string; active:
                     className="absolute inset-x-0 -bottom-0.5 h-px bg-gold"
                 />
             )}
-        </a>
+        </Link>
     );
 }
 
@@ -87,9 +88,9 @@ export function Navbar() {
                         : "border-transparent bg-transparent",
                 )}
             >
-                <a href="#home" className="font-script text-4xl leading-none text-gold" aria-label="Azarias & Paola">
+                <Link href="#home" className="font-script text-4xl leading-none text-gold" aria-label="Azarias & Paola">
                     A &amp; P
-                </a>
+                </Link>
 
                 {/* Desktop links */}
                 <ul className="hidden items-center gap-7 lg:flex">
@@ -109,12 +110,12 @@ export function Navbar() {
                         {other}
                     </button>
 
-                    <a
+                    <Link
                         href="#events"
                         className="hidden h-9 items-center rounded-lg bg-gold px-5 text-sm font-semibold text-night transition hover:bg-gold-soft active:scale-95 sm:flex"
                     >
                         {t("cta")}
-                    </a>
+                    </Link>
 
                     {/* Mobile menu */}
                     <Sheet>
@@ -135,7 +136,7 @@ export function Navbar() {
                                         transition={{ delay: 0.1 + i * 0.07 }}
                                     >
                                         <SheetClose>
-                                            <a
+                                            <Link
                                                 href={`#${id}`}
                                                 aria-current={active === id ? "location" : undefined}
                                                 className={cn(
@@ -144,19 +145,19 @@ export function Navbar() {
                                                 )}
                                             >
                                                 {t(id)}
-                                            </a>
+                                            </Link>
                                         </SheetClose>
                                     </motion.li>
                                 ))}
                             </ul>
                             <div className="mt-6 px-4">
                                 <SheetClose>
-                                    <a
+                                    <Link
                                         href="#events"
                                         className="flex h-11 items-center justify-center rounded-lg bg-gold font-semibold text-night transition hover:bg-gold-soft"
                                     >
                                         {t("cta")}
-                                    </a>
+                                    </Link>
                                 </SheetClose>
                             </div>
                         </SheetContent>

@@ -52,15 +52,21 @@ export const wedding = {
     },
     {
       id: "civil",
-      date: "2027-01-31T10:00:00+01:00",
+      date: "2027-01-30T10:00:00+01:00",
       venue: "Maison communale de la Gombe",
       address: "Avenue de la Mission, Gombe, Kinshasa",
     },
     {
-      id: "religious",
+      id: "talk",
       date: "2027-01-31T13:00:00+01:00",
       venue: "Salle du Royaume de Tshiela",
       address: "Avenue Tshela, Croisement Rue Kasavubu, Kinshasa",
+    },
+    {
+      id: "party",
+      date: "2027-01-31T19:30:00+01:00",
+      venue: "Salle de fête Le Prestige",
+      address: "Avenue du Commerce, Gombe, Kinshasa",
     },
   ],
   storyIds: ["meeting", "love", "proposal", "forever"],

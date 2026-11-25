@@ -1,12 +1,18 @@
 export const DRINKS = [
   "Primus",
-  "Skol",
+  "Likofi",
   "Tembo",
   "Turbo King",
   "Mützig",
   "Nkoyi",
   "Wine",
   "Soft drink",
+  "Coca",
+  "Fanta",
+  "Vitalo",
+  "Top",
+  "Maltina",
+  "Energy Malt",
   "Water",
 ] as const;
 export const STATUSES = ["pending", "confirmed", "declined"] as const;
@@ -17,11 +23,15 @@ export const STATUS_LABELS: Record<(typeof STATUSES)[number], string> = {
   confirmed: "Confirmé",
   declined: "Décliné",
 };
+
 export const EVENT_LABELS: Record<string, string> = {
   customary: "Mariage coutumier",
   civil: "Mariage civil",
-  religious: "Mariage religieux",
+  talk: "Discours de mariage",
+  party: "Soirée dansante",
 };
+
+export const COMPANIONS = ["none", "wife", "husband"] as const;
 
 // Used by the public RSVP form (bilingual) and by the admin (always "fr").
 // Brand names stay as they are; generic drinks are translated.

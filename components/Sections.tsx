@@ -135,19 +135,19 @@ export function Events() {
     return (
         <section id="events" className="mx-auto max-w-6xl px-6 py-32">
             <Title kicker={t("kicker")}>{t("title")}</Title>
-            <div className="grid gap-8 md:grid-cols-3">
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {wedding.events.map((e, i) => {
                     const d = new Date(e.date);
                     return (
                         <FadeContent key={e.id} blur delay={i * 150} duration={900}>
-                            <SpotlightCard className="first-letter:capitalize h-full border-gold/20! bg-surface! text-center" spotlightColor="rgba(230,57,70,0.25)">
-                                <p className="text-sm tracking-[0.35em] text-ember">{f.dateTime(d, { weekday: "long" })}</p>
+                            <SpotlightCard className="h-full border-gold/20! bg-surface! text-center" spotlightColor="rgba(230,57,70,0.25)">
+                                <p className="text-xs uppercase tracking-[0.35em] text-ember">{f.dateTime(d, { weekday: "long" })}</p>
                                 <p className="mt-2 font-serif text-8xl leading-none text-gold-soft">{f.dateTime(d, { day: "numeric" })}</p>
-                                <p className="font-serif text-2xl tracking-widest text-cream">{f.dateTime(d, { month: "long", year: "numeric" })}</p>
+                                <p className="font-serif text-2xl uppercase tracking-widest text-cream">{f.dateTime(d, { month: "long", year: "numeric" })}</p>
                                 <h3 className="mt-6 font-serif text-3xl text-gold">{t(`${e.id}.title`)}</h3>
                                 <p className="mt-1 text-sm text-cream/60">{t("at", { time: f.dateTime(d, { hour: "2-digit", minute: "2-digit" }) })}</p>
-                                <p className="mt-4 text-cream/80">{e.venue}</p>
-                                <p className="text-sm text-cream/50">{e.address}</p>
+                                <p className="mt-4 text-cream/80">{t.has(`${e.id}.venue`) ? t(`${e.id}.venue`) : e.venue}</p>
+                                <p className="text-sm text-cream/50">{t.has(`${e.id}.address`) ? t(`${e.id}.address`) : e.address}</p>
                                 <p className="mt-4 text-sm text-cream/70">{t(`${e.id}.text`)}</p>
                             </SpotlightCard>
                         </FadeContent>
@@ -156,7 +156,7 @@ export function Events() {
             </div>
         </section>
     );
-}
+  }
 
 export function Gallery() {
     const t = useTranslations("gallery");
@@ -178,7 +178,7 @@ export function Footer() {
     const t = useTranslations("footer");
     return (
         <footer className="border-t border-gold/20 py-16 text-center">
-            <p className="font-serif text-4xl text-gold-soft">Paola &amp; Azarias</p>
+            <p className="font-serif text-4xl text-gold-soft">Azarias &amp; Paola</p>
             <p className="mt-3 tracking-widest text-gold">{wedding.hashtag}</p>
             <p className="mt-2 text-sm text-cream/50">{t("thanks")}</p>
         </footer>
