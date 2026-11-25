@@ -73,9 +73,15 @@
             "title": "Mariage civil",
             "text": "L'union officielle, entourée de nos proches."
         },
-        "religious": {
-            "title": "Mariage religieux",
-            "text": "Le discours de mariage et les vœux."
+        "talk": {
+            "title": "Discours de mariage",
+            "text": "Le discours de mariage, présenté à la Salle du Royaume de Paola.",
+            "venue": "Salle du Royaume des Témoins de Jéhovah",
+            "address": "Avenue Tshela, au croisement avec l'avenue Kasavubu, juste avant Kabinda en partant vers Kabambare"
+        },
+        "party": {
+            "title": "Soirée dansante",
+            "text": "Une soirée pour danser et célébrer ensemble."
         }
     },
     "gallery": {
@@ -122,6 +128,16 @@
             "thanksNo": "Merci de nous avoir répondu. Vous nous manquerez.",
             "close": "Fermer",
             "error": "Une erreur est survenue, veuillez réessayer."
-        }
+        },
+        "notFoundTitle": "Invitation introuvable",
+        "notFoundText": "Ce lien n'est pas valide. Vérifiez le message que vous avez reçu ou contactez les mariés.",
+        "companion": {
+            "wife": "Vous et votre épouse",
+            "husband": "Vous et votre époux"
+        },
+        "dressCode": "Tenue : {value}",
+        "passLocked": "Confirmez votre présence pour recevoir votre QR code d'entrée.",
+        "download": "Télécharger mon QR code",
+        "addr": "Adresse"
     }
 }

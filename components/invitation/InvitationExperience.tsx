@@ -6,13 +6,14 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { useFormatter, useTranslations } from "next-intl";
 import { LangSwitch } from "@/components/LangSwitch";
 import { Link } from "@/src/i18n/navigation";
-import { lastDate, mainDate, wedding } from "@/lib/wedding";
+import { wedding } from "@/lib/wedding";
 import { cn } from "@/lib/utils";
 import { RsvpDialog, type Rsvp } from "./RsvpDialog";
 
 export type InvitationData = {
-  token: string; qr: string; name: string; seats: number; status: Rsvp["status"]; drink: string | null; tableName: string | null;
-  events: { id: string; date: string; venue: string; address: string }[];
+  token: string; qr: string; name: string; seats: number; companion: "none" | "wife" | "husband";
+  status: Rsvp["status"]; drink: string | null; tableName: string | null;
+  events: { id: string; date: string; venue: string | null; address: string | null; dressCode: string | null }[];
 };
 
 type Phase = "sealed" | "opening" | "letter" | "leaflet" | "open";
@@ -21,6 +22,7 @@ const EASE = [0.22, 1, 0.36, 1] as const; // smooth deceleration
 const SOFT = [0.65, 0, 0.35, 1] as const; // slow in-out (the unfolding)
 const paper = "bg-[#0e0a0b] bg-[radial-gradient(ellipse_at_50%_0%,rgba(179,18,31,.28),transparent_60%)]";
 const hidden = "[backface-visibility:hidden] [-webkit-backface-visibility:hidden]";
+const pad = (n: number) => String(n).padStart(2, "0");
 
 // Phones: the leaflet unfolds vertically (top page = photo). Larger screens: horizontally.
 function useVertical() {
@@ -31,13 +33,29 @@ function useVertical() {
   );
 }
 
+// Dates shown on the invitation: ONLY the ceremonies this guest is invited to.
+function useDates(events: InvitationData["events"]) {
+  const f = useFormatter();
+  const th = useTranslations("hero");
+  const sorted = [...events].sort((a, b) => +new Date(a.date) - +new Date(b.date));
+  const firstIso = sorted[0]?.date ?? wedding.events[0].date;
+  const lastIso = sorted[sorted.length - 1]?.date ?? firstIso;
+  const first = new Date(firstIso);
+  const last = new Date(lastIso);
+  const full = (d: Date) => f.dateTime(d, { day: "numeric", month: "long", year: "numeric" });
+  const label = firstIso.slice(0, 10) === lastIso.slice(0, 10) ? full(last) : th("dates", { first: f.dateTime(first, { day: "numeric" }), second: full(last) });
+  return { label, cover: `${pad(first.getUTCDate())} · ${pad(first.getUTCMonth() + 1)} · ${first.getUTCFullYear()}` };
+}
+
 export function InvitationExperience({ data }: { data: InvitationData }) {
   const reduce = useReducedMotion();
   const vertical = useVertical();
+  const dates = useDates(data.events);
   const [phase, setPhase] = useState<Phase>("sealed");
   const [rsvp, setRsvp] = useState<Rsvp>({ status: data.status, drink: data.drink });
   const [dialog, setDialog] = useState(false);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const justConfirmed = useRef(false);
   useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   const shown: Phase = reduce ? "open" : phase; // reduced motion: skip straight to the invitation
@@ -54,33 +72,49 @@ export function InvitationExperience({ data }: { data: InvitationData }) {
     ];
   };
 
+  const onSaved = (r: Rsvp) => {
+    setRsvp(r);
+    if (r.status === "confirmed") justConfirmed.current = true;
+  };
+  const onDialogChange = (o: boolean) => {
+    setDialog(o);
+    if (!o && justConfirmed.current) { // after a confirmation, bring the QR code into view
+      justConfirmed.current = false;
+      setTimeout(() => document.getElementById("pass")?.scrollIntoView({ behavior: "smooth", block: "center" }), 500);
+    }
+  };
+
   return (
     <main className="relative flex min-h-svh flex-col items-center justify-center gap-12 overflow-x-clip px-4 py-20">
       <div className="fixed right-4 top-4 z-40"><LangSwitch /></div>
       <AnimatePresence mode="wait">
         {showEnvelope ? (
-          <Envelope key="envelope" phase={shown} name={data.name} onOpen={start} />
+          <Envelope key="envelope" phase={shown} name={data.name} cover={dates.cover} onOpen={start} />
         ) : (
-          <Leaflet key="leaflet" data={data} rsvp={rsvp} open={shown === "open"} vertical={vertical} reduce={!!reduce} onRsvp={() => setDialog(true)} />
+          <Leaflet key="leaflet" data={data} rsvp={rsvp} dates={dates} open={shown === "open"} vertical={vertical} reduce={!!reduce} onRsvp={() => setDialog(true)} />
         )}
       </AnimatePresence>
-      {shown === "open" && <Pass data={data} />}
-      <RsvpDialog open={dialog} onOpenChange={setDialog} token={data.token} current={rsvp} onSaved={setRsvp} />
+
+      {/* The QR code is only given once the guest has confirmed */}
+      {shown === "open" && rsvp.status === "confirmed" && <Pass data={data} />}
+      {shown === "open" && rsvp.status === "pending" && <PassLocked onRsvp={() => setDialog(true)} />}
+
+      <RsvpDialog open={dialog} onOpenChange={onDialogChange} token={data.token} current={rsvp} onSaved={onSaved} />
     </main>
   );
 }
 
 /* ───────────────────────────── Envelope ───────────────────────────── */
 
-function Envelope({ phase, name, onOpen }: { phase: Phase; name: string; onOpen: () => void }) {
+function Envelope({ phase, name, cover, onOpen }: { phase: Phase; name: string; cover: string; onOpen: () => void }) {
   const t = useTranslations("invitation");
   const opened = phase !== "sealed";
   const gold = "#d4af37";
   return (
     <motion.div exit={{ y: 180, opacity: 0, scale: 0.9, transition: { duration: 1, ease: EASE } }} className="flex flex-col items-center gap-10">
-      {/* <motion.p initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, ease: EASE }} className="font-script text-4xl text-gold-soft sm:text-5xl">
+      <motion.p initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1.2, ease: EASE }} className="font-script text-4xl text-gold-soft sm:text-5xl">
         {t("for", { name })}
-      </motion.p> */}
+      </motion.p>
 
       <div
         role="button" tabIndex={0} aria-label={t("open")} aria-disabled={opened}
@@ -93,7 +127,7 @@ function Envelope({ phase, name, onOpen }: { phase: Phase; name: string; onOpen:
 
         {/* the letter, hidden behind the front pocket until it rises */}
         <motion.div className="absolute inset-x-[10%] bottom-[8%] top-[8%] z-10" animate={{ y: phase === "letter" ? "-62%" : 0 }} transition={{ duration: 1.5, ease: EASE }}>
-          <CoverArt compact />
+          <CoverArt compact date={cover} />
         </motion.div>
 
         {/* front pocket */}
@@ -140,10 +174,8 @@ function Envelope({ phase, name, onOpen }: { phase: Phase; name: string; onOpen:
 }
 
 /* Cover of the leaflet; the same artwork is the letter inside the envelope (sizes in cqw scale with the card). */
-function CoverArt({ compact = false }: { compact?: boolean }) {
+function CoverArt({ compact = false, date }: { compact?: boolean; date: string }) {
   const t = useTranslations("invitation");
-  const d = new Date(mainDate);
-  const date = `${String(d.getUTCDate()).padStart(2, "0")} · ${String(d.getUTCMonth() + 1).padStart(2, "0")} · ${d.getUTCFullYear()}`;
   const { bride, groom } = wedding.couple;
   return (
     <div style={{ containerType: "inline-size" }} className={cn("relative size-full overflow-hidden rounded-sm border border-gold/60", paper)}>
@@ -163,8 +195,8 @@ function CoverArt({ compact = false }: { compact?: boolean }) {
 
 /* ───────────────────────────── Leaflet ───────────────────────────── */
 
-function Leaflet({ data, rsvp, open, vertical, reduce, onRsvp }: {
-  data: InvitationData; rsvp: Rsvp; open: boolean; vertical: boolean; reduce: boolean; onRsvp: () => void;
+function Leaflet({ data, rsvp, dates, open, vertical, reduce, onRsvp }: {
+  data: InvitationData; rsvp: Rsvp; dates: { label: string; cover: string }; open: boolean; vertical: boolean; reduce: boolean; onRsvp: () => void;
 }) {
   const dur = reduce ? 0 : 1.9;
   const folded = vertical ? { y: "-25%" } : { x: "-25%" }; // while closed, only one page is visible: keep it centred
@@ -184,11 +216,11 @@ function Leaflet({ data, rsvp, open, vertical, reduce, onRsvp }: {
             transition={{ duration: dur, ease: SOFT }}
           >
             <div className={cn("absolute inset-0 shadow-[0_30px_80px_rgba(0,0,0,.6)]", hidden)}><PhotoPage vertical={vertical} /></div>
-            <div className={cn("absolute inset-0 shadow-[0_30px_80px_rgba(0,0,0,.6)]", hidden)} style={{ transform: vertical ? "rotateX(180deg)" : "rotateY(180deg)" }}><CoverArt /></div>
+            <div className={cn("absolute inset-0 shadow-[0_30px_80px_rgba(0,0,0,.6)]", hidden)} style={{ transform: vertical ? "rotateX(180deg)" : "rotateY(180deg)" }}><CoverArt date={dates.cover} /></div>
           </motion.div>
         </div>
         {/* page 2 (right / bottom) */}
-        <div className="relative shadow-[0_30px_80px_rgba(0,0,0,.6)]"><InvitationPage data={data} rsvp={rsvp} vertical={vertical} onRsvp={onRsvp} /></div>
+        <div className="relative shadow-[0_30px_80px_rgba(0,0,0,.6)]"><InvitationPage data={data} rsvp={rsvp} dates={dates.label} vertical={vertical} onRsvp={onRsvp} /></div>
       </motion.div>
     </motion.div>
   );
@@ -226,29 +258,32 @@ function PhotoPage({ vertical }: { vertical: boolean }) {
   );
 }
 
-function InvitationPage({ data, rsvp, vertical, onRsvp }: { data: InvitationData; rsvp: Rsvp; vertical: boolean; onRsvp: () => void }) {
+function InvitationPage({ data, rsvp, dates, vertical, onRsvp }: { data: InvitationData; rsvp: Rsvp; dates: string; vertical: boolean; onRsvp: () => void }) {
   const t = useTranslations("invitation");
   const te = useTranslations("events");
-  const th = useTranslations("hero");
   const f = useFormatter();
-  const dates = th("dates", { first: f.dateTime(new Date(mainDate), { day: "numeric" }), second: f.dateTime(new Date(lastDate), { day: "numeric", month: "long", year: "numeric" }) });
   return (
     <div className={cn("relative flex size-full flex-col items-center justify-center gap-3 overflow-hidden border border-gold/50 px-6 py-8 text-center md:px-10", paper, vertical ? "rounded-b-sm" : "rounded-r-sm")}>
       <div aria-hidden className="pointer-events-none absolute inset-2 border border-gold/20" />
       <p className="text-[10px] uppercase tracking-[0.4em] text-gold">{t("kicker")}</p>
       <p className="font-script text-4xl leading-tight text-gold-soft sm:text-5xl">{data.name}</p>
+      {data.companion !== "none" && <p className="font-serif text-xl italic text-cream">{t(`companion.${data.companion}`)}</p>}
       <p className="max-w-xs font-serif text-lg italic leading-snug text-cream/80">{t("text")}</p>
       <p className="text-xs uppercase tracking-[0.3em] text-gold">{dates}</p>
       <div aria-hidden className="flex items-center gap-3 text-gold"><span className="h-px w-10 bg-gold/50" />✦<span className="h-px w-10 bg-gold/50" /></div>
 
-      <ul className="w-full space-y-2.5">
+      <ul className="w-full space-y-3">
         {data.events.map((e) => {
           const d = new Date(e.date);
+          const venue = e.venue ?? (te.has(`${e.id}.venue`) ? te(`${e.id}.venue`) : "");
+          const address = e.address ?? (te.has(`${e.id}.address`) ? te(`${e.id}.address`) : "");
           return (
             <li key={e.id}>
               <p className="font-serif text-xl leading-tight text-gold-soft">{te(`${e.id}.title`)}</p>
               <p className="text-xs text-cream/70">{f.dateTime(d, { weekday: "long", day: "numeric", month: "long" })} · {f.dateTime(d, { hour: "2-digit", minute: "2-digit" })}</p>
-              <p className="text-xs text-cream/50">{e.venue}</p>
+              {venue && <p className="text-xs text-cream/60">{venue}</p>}
+              {address && <p className="mx-auto max-w-xs text-[11px] leading-snug text-cream/40">{address}</p>}
+              {e.dressCode && <p className="mt-0.5 text-xs italic text-gold">{t("dressCode", { value: e.dressCode })}</p>}
             </li>
           );
         })}
@@ -273,21 +308,38 @@ function InvitationPage({ data, rsvp, vertical, onRsvp }: { data: InvitationData
   );
 }
 
-/* ───────────────────────── Entrance pass (QR) ───────────────────────── */
+/* ───────────────────── Entrance pass (QR), after confirmation ───────────────────── */
+
+function PassLocked({ onRsvp }: { onRsvp: () => void }) {
+  const t = useTranslations("invitation");
+  return (
+    <motion.section initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1, duration: 0.9, ease: EASE }}
+      className="w-full max-w-sm rounded-[2rem] border border-dashed border-gold/40 bg-surface/70 p-8 text-center backdrop-blur">
+      <p className="text-xs uppercase tracking-[0.4em] text-gold">{t("passTitle")}</p>
+      <p className="mt-3 font-serif text-xl text-cream/80">{t("passLocked")}</p>
+      <button onClick={onRsvp} className="mt-5 rounded-full bg-gold px-6 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-night transition hover:bg-gold-soft active:scale-95">{t("confirm")}</button>
+    </motion.section>
+  );
+}
 
 function Pass({ data }: { data: InvitationData }) {
   const t = useTranslations("invitation");
+  const file = `qr-${data.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-zA-Z0-9]+/g, "-").replace(/^-|-$/g, "").toLowerCase() || "invitation"}.png`;
   return (
-    <motion.section initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 1.6, duration: 1, ease: EASE }}
+    <motion.section id="pass" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4, duration: 1, ease: EASE }}
       className="w-full max-w-sm rounded-[2rem] border border-gold/50 bg-surface/90 p-8 text-center shadow-[0_0_80px_rgba(179,18,31,.3)] backdrop-blur">
       <p className="text-xs uppercase tracking-[0.4em] text-gold">{t("passTitle")}</p>
       <p className="mt-2 font-script text-4xl text-gold-soft">{data.name}</p>
+      {data.companion !== "none" && <p className="font-serif italic text-cream/80">{t(`companion.${data.companion}`)}</p>}
       <p className="mt-2 text-sm text-cream/70">{t("seats", { count: data.seats })}</p>
       <p className="text-sm text-gold-soft">{data.tableName ? t("table", { name: data.tableName }) : t("tableSoon")}</p>
       <div className="mx-auto mt-5 w-52 rounded-xl bg-white p-2">
         <Image src={data.qr} alt="QR code" width={240} height={240} unoptimized className="size-full" />
       </div>
       <p className="mt-3 text-xs text-cream/50">{t("scan")}</p>
+      <Link href={data.qr} download={file} className="mt-5 inline-flex items-center justify-center rounded-full bg-gold px-6 py-3 text-xs font-semibold uppercase tracking-[0.25em] text-night transition hover:bg-gold-soft active:scale-95">
+        {t("download")}
+      </Link>
     </motion.section>
   );
 }

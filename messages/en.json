@@ -122,6 +122,16 @@
             "thanksNo": "Thank you for letting us know. You will be missed.",
             "close": "Close",
             "error": "Something went wrong, please try again."
-        }
+        },
+        "notFoundTitle": "Invitation not found",
+        "notFoundText": "This link is not valid. Please check the message you received or contact the couple.",
+        "companion": {
+            "wife": "You and your wife",
+            "husband": "You and your husband"
+        },
+        "dressCode": "Dress code: {value}",
+        "passLocked": "Confirm your presence to receive your entrance QR code.",
+        "download": "Download my QR code",
+        "addr": "Address"
     }
 }
