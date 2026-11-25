@@ -93,7 +93,7 @@
     },
     "invitation": {
         "kicker": "You are invited",
-        "text": "Azarias and Paola are delighted to invite you to celebrate their wedding.",
+        "text": "Two hearts, one promise, a shared path. We have decided to say “I do” and would be delighted to share this moment with you.",
         "seats": "{count, plural, one {# seat reserved} other {# seats reserved}}",
         "table": "Your table: {name}",
         "tableSoon": "Your table will be announced soon.",
