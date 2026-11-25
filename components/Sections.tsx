@@ -79,7 +79,7 @@ export function Together() {
                     <div aria-hidden className="absolute inset-0 translate-x-4 translate-y-4 rounded-[2rem] border border-gold/40 sm:translate-x-6 sm:translate-y-6" />
                     <div className="relative aspect-4/5 overflow-hidden rounded-[2rem] border border-gold/50 bg-night sm:aspect-16/10">
                         {wedding.couplePhoto ? (
-                            <Image src={wedding.couplePhoto} alt={`${bride.firstName} & ${groom.firstName}`} fill sizes="(min-width: 1024px) 896px, 100vw" className="animate-kenburns object-cover" />
+                            <Image src={wedding.couplePhoto} alt={`${groom.firstName} & ${bride.firstName}`} fill sizes="(min-width: 1024px) 896px, 100vw" className="animate-kenburns object-cover" />
                         ) : (
                             <div className="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_50%_40%,rgba(179,18,31,.7),var(--color-night)_75%)]">
                                 <svg aria-hidden viewBox="0 0 200 120" className="-translate-y-10 w-48 text-gold-soft sm:w-72" fill="none" stroke="currentColor" strokeWidth="3">
@@ -89,7 +89,7 @@ export function Together() {
                         )}
                         <div className="absolute inset-0 bg-linear-to-t from-night/90 via-night/10 to-transparent" />
                         <div className="absolute inset-x-0 bottom-0 p-6 text-center sm:p-10">
-                            <p className="font-script text-4xl text-gold-soft sm:text-6xl">{bride.firstName} &amp; {groom.firstName}</p>
+                            <p className="font-script text-4xl text-gold-soft sm:text-6xl">{groom.firstName} &amp; {bride.firstName}</p>
                             <p className="mx-auto mt-2 max-w-xl font-serif text-lg italic text-cream/90 sm:text-2xl">“{t("quote")}”</p>
                         </div>
                     </div>

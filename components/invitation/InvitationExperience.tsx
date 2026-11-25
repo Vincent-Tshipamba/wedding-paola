@@ -183,9 +183,9 @@ function CoverArt({ compact = false, date }: { compact?: boolean; date: string }
       <div className="relative grid size-full place-content-center justify-items-center text-center" style={{ gap: compact ? "2cqw" : "4cqw" }}>
         <p className="font-serif uppercase text-gold" style={{ fontSize: compact ? "3.6cqw" : "3.4cqw", letterSpacing: ".4em" }}>{t("coverKicker")}</p>
         {compact ? (
-          <p className="font-script text-gold-soft" style={{ fontSize: "13cqw", lineHeight: 1.1 }}>{bride.firstName} &amp; {groom.firstName}</p>
+          <p className="font-script text-gold-soft" style={{ fontSize: "13cqw", lineHeight: 1.1 }}>{groom.firstName} &amp; {bride.firstName}</p>
         ) : (
-          <p className="font-script text-gold-soft" style={{ fontSize: "19cqw", lineHeight: 0.95 }}>{bride.firstName}<br /><span className="text-gold" style={{ fontSize: "12cqw" }}>&amp;</span><br />{groom.firstName}</p>
+          <p className="font-script text-gold-soft" style={{ fontSize: "19cqw", lineHeight: 0.95 }}>{groom.firstName}<br /><span className="text-gold" style={{ fontSize: "12cqw" }}>&amp;</span><br />{bride.firstName}</p>
         )}
         <p className="font-serif text-cream/80" style={{ fontSize: compact ? "4cqw" : "4.2cqw", letterSpacing: ".3em" }}>{date}</p>
       </div>
@@ -240,7 +240,7 @@ function PhotoPage({ vertical }: { vertical: boolean }) {
       <div className="relative min-h-60 overflow-hidden rounded-t-full border border-gold/60 p-1.5">
         <div className="relative size-full overflow-hidden rounded-t-full">
           {wedding.couplePhoto ? (
-            <Image src={wedding.couplePhoto} alt={`${bride.firstName} & ${groom.firstName}`} fill sizes="(min-width: 768px) 480px, 90vw" className="object-cover" />
+            <Image src={wedding.couplePhoto} alt={`${groom.firstName} & ${bride.firstName}`} fill sizes="(min-width: 768px) 480px, 90vw" className="object-cover" />
           ) : (
             <div className="absolute inset-0 grid place-items-center bg-[radial-gradient(circle_at_50%_40%,rgba(179,18,31,.7),#0a0809_75%)]">
               <svg aria-hidden viewBox="0 0 200 120" className="w-40 text-gold-soft" fill="none" stroke="currentColor" strokeWidth="3"><circle cx="78" cy="60" r="42" /><circle cx="122" cy="60" r="42" /></svg>
@@ -250,7 +250,7 @@ function PhotoPage({ vertical }: { vertical: boolean }) {
         </div>
       </div>
       <div className="text-center">
-        <p className="font-script text-4xl text-gold-soft md:text-5xl">{bride.firstName} &amp; {groom.firstName}</p>
+        <p className="font-script text-4xl text-gold-soft md:text-5xl">{groom.firstName} &amp; {bride.firstName}</p>
         <p className="mt-1 text-[10px] uppercase tracking-[0.35em] text-gold">{t("photoCaption")}</p>
       </div>
       <Hinge vertical={vertical} side="first" />
