@@ -19,7 +19,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ size: st
                         backgroundImage: "radial-gradient(circle at 50% 30%, #7a0f1a, #0a0809)", color: "#f1d48a",
                     }}
                 >
-                    <div style={{ display: "flex", fontSize: Math.round(inner * 0.36), lineHeight: 1 }}>P&amp;A</div>
+                    <div style={{ display: "flex", fontSize: Math.round(inner * 0.36), lineHeight: 1 }}>A&amp;P</div>
                     <div style={{ display: "flex", marginTop: Math.round(inner * 0.06), fontSize: Math.round(inner * 0.09), letterSpacing: Math.round(inner * 0.02), color: "#d4af37" }}>
                         {scan ? "ENTRÉE" : "ADMIN"}
                     </div>

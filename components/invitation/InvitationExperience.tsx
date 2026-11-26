@@ -162,7 +162,7 @@ function Envelope({ phase, name, cover, onOpen }: { phase: Phase; name: string; 
           animate={opened ? { opacity: 0, scale: 1.5 } : { opacity: 1, scale: [1, 1.07, 1] }}
           transition={opened ? { duration: 0.6 } : { repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
         >
-          <span className="font-script text-3xl leading-none text-gold-soft">P&amp;A</span>
+          <span className="font-script text-3xl leading-none text-gold-soft">A&amp;P</span>
         </motion.div>
       </div>
 

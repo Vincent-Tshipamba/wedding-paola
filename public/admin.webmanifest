@@ -1,7 +1,7 @@
 {
   "id": "/admin",
-  "name": "Paola & Azarias — Administration",
-  "short_name": "P&A Admin",
+  "name": "Azarias & Paola — Administration",
+  "short_name": "A&P Admin",
   "description": "Gestion des invités, des tables et des invitations",
   "lang": "fr",
   "start_url": "/admin",

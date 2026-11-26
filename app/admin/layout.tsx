@@ -10,9 +10,9 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 export const metadata: Metadata = {
     title: "Admin — Azarias & Paola",
     robots: { index: false, follow: false },
-    manifest: "/admin.webmanifest", // installable app: "P&A Admin"
+    manifest: "/admin.webmanifest", // installable app: "A&P Admin"
     icons: { icon: "/admin/pwa-icon/192?kind=admin", apple: "/admin/pwa-icon/180?kind=admin" },
-    appleWebApp: { capable: true, title: "P&A Admin", statusBarStyle: "black" },
+    appleWebApp: { capable: true, title: "A&P Admin", statusBarStyle: "black" },
 };
 export const viewport: Viewport = { themeColor: "#0a0809" };
 
