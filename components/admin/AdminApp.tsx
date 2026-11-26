@@ -1,13 +1,14 @@
 "use client";
+import Link from "next/link";
 import { useState } from "react";
 import type { EventSetting, Guest, TableRow } from "@/db/schema";
 import { logout } from "@/lib/admin-actions";
 import { btnGhost, btnGold } from "@/lib/admin-ui";
 import { DRINKS, drinkLabel } from "@/lib/config";
 import { EventsPanel } from "./EventsPanel";
+import { InstallButton } from "./InstallButton";
 import { GuestsPanel } from "./GuestsPanel";
 import { TablesPanel } from "./TablesPanel";
-import Link from "next/link";
 
 const TABS = [["guests", "Invités"], ["events", "Événements"], ["tables", "Tables"], ["drinks", "Boissons"]] as const;
 
@@ -31,7 +32,8 @@ export function AdminApp({ guests, tables, settings }: { guests: Guest[]; tables
                     <p className="font-script text-5xl leading-none text-gold-soft">Azarias &amp; Paola</p>
                     <p className="mt-1 text-xs uppercase tracking-[0.4em] text-gold">Gestion des invités</p>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
+                    <InstallButton />
                     <Link href="/admin/scan" className={btnGhost}>Contrôle d&apos;entrée</Link>
                     <Link href="/" className={btnGhost}>Voir le site</Link>
                     <form action={logout}><button className={btnGold}>Se déconnecter</button></form>
@@ -73,7 +75,7 @@ function DrinksPanel({ guests }: { guests: Guest[] }) {
             {rows.map(([name, n]) => (
                 <div key={name}>
                     <div className="mb-1 flex justify-between text-sm"><span>{name}</span><span className="text-gold-soft">{n}</span></div>
-                    <div className="h-2 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-linear-to-r from-crimson to-gold" style={{ width: `${(n / max) * 100}%` }} /></div>
+                    <div className="h-2 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-gradient-to-r from-crimson to-gold" style={{ width: `${(n / max) * 100}%` }} /></div>
                 </div>
             ))}
         </div>

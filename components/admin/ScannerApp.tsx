@@ -1,12 +1,13 @@
 "use client";
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
 import jsQR from "jsqr";
 import { Camera, CameraOff, Minus, Plus, RefreshCw, Search, Undo2, WifiOff } from "lucide-react";
 import { logout } from "@/lib/admin-actions";
 import { btnGhost, btnGold, field } from "@/lib/admin-ui";
+import { InstallButton } from "./InstallButton";
 import { confirmLocal, decideLocal, loadQueue, loadRoster, saveQueue, saveRoster, searchLocal, totalsLocal, uid, undoLocal } from "@/lib/door-offline";
 import { confirmEntry, getRoster, scanToken, searchGuests, syncOps, undoEntry, type Op, type ScanGuest, type ScanResult, type Totals } from "@/lib/scan-actions";
-import Link from "next/link";
 
 type Tone = "ok" | "warn" | "bad";
 type View = ScanResult | { kind: "error" };
@@ -323,6 +324,7 @@ export function ScannerApp({ initialTotals, isAdmin }: { initialTotals: Totals; 
                         <p className="font-serif text-3xl leading-none text-gold-soft">{totals.arrived}<span className="text-cream/40"> / {totals.expected}</span></p>
                         <p className="text-[10px] uppercase tracking-[0.2em] text-cream/60">Entrés</p>
                     </div>
+                    <InstallButton />
                     {isAdmin && <Link href="/admin" className={btnGhost}>Admin</Link>}
                     <form action={logout}><button className={btnGhost}>Quitter</button></form>
                 </div>

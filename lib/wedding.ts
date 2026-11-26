@@ -74,53 +74,53 @@ export const wedding = {
   gallery: [
     {
       src: "/gallery/1.jpeg",
-      alt: "Paola and Azarias, photo 1",
+      alt: "Azarias and Paola, photo 1",
     },
     {
       src: "/gallery/2.jpeg",
-      alt: "Paola and Azarias, photo 2",
+      alt: "Azarias and Paola, photo 2",
     },
     {
       src: "/gallery/3.jpeg",
-      alt: "Paola and Azarias, photo 3",
+      alt: "Azarias and Paola, photo 3",
     },
     {
       src: "/gallery/4.jpeg",
-      alt: "Paola and Azarias, photo 4",
+      alt: "Azarias and Paola, photo 4",
     },
     {
       src: "/gallery/5.jpeg",
-      alt: "Paola and Azarias, photo 5",
+      alt: "Azarias and Paola, photo 5",
     },
     {
       src: "/gallery/6.jpeg",
-      alt: "Paola and Azarias, photo 6",
+      alt: "Azarias and Paola, photo 6",
     },
     {
       src: "/gallery/7.jpeg",
-      alt: "Paola and Azarias, photo 7",
+      alt: "Azarias and Paola, photo 7",
     },
     {
       src: "/gallery/8.jpeg",
-      alt: "Paola and Azarias, photo 8",
+      alt: "Azarias and Paola, photo 8",
     },
     {
       src: "/gallery/9.jpeg",
-      alt: "Paola and Azarias, photo 9",
+      alt: "Azarias and Paola, photo 9",
     },
     {
       src: "/gallery/10.jpeg",
-      alt: "Paola and Azarias, photo 10",
+      alt: "Azarias and Paola, photo 10",
     },
     {
       src: "/gallery/11.jpeg",
-      alt: "Paola and Azarias, photo 11",
+      alt: "Azarias and Paola, photo 11",
     },
     {
       src: "/gallery/12.jpeg",
-      alt: "Paola and Azarias, photo 12",
+      alt: "Azarias and Paola, photo 12",
     },
-  ] as { src: string; alt: string }[], // e.g. [{ src: "/gallery/1.jpg", alt: "Paola and Azarias, photo 1" }]
+  ] as { src: string; alt: string }[], // e.g. [{ src: "/gallery/1.jpg", alt: "Azarias and Paola, photo 1" }]
 };
 
 export const mainDate = wedding.events[0].date;

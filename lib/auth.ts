@@ -69,12 +69,12 @@ export async function isAdmin() {
 export async function requireAdmin() {
   const role = await getRole();
   if (role === "admin") return;
-  redirect(role === "scanner" ? "/admin/scan" : "/admin/login");
+  redirect(role === "scanner" ? "/admin/scan" : "/admin/login?next=/admin");
 }
 
 /** Scanner page and actions: admin or door staff. */
 export async function requireStaff(): Promise<Role> {
   const role = await getRole();
-  if (!role) redirect("/admin/login");
+  if (!role) redirect("/admin/login?next=/admin/scan");
   return role;
 }

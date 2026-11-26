@@ -42,7 +42,16 @@ export async function login(
     return { error: "Mot de passe incorrect" };
   }
   await createSession(role);
-  redirect(role === "admin" ? "/admin" : "/admin/scan");
+  // Go back to where the person came from (the installed apps start on their own page); same-site /admin paths only.
+  const next = String(formData.get("next") ?? "");
+  const safe = next.startsWith("/admin") && !next.startsWith("//") ? next : "";
+  redirect(
+    role === "admin"
+      ? safe || "/admin"
+      : safe.startsWith("/admin/scan")
+        ? safe
+        : "/admin/scan",
+  );
 }
 
 export async function logout() {

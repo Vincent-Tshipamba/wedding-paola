@@ -1,0 +1,17 @@
+{
+  "id": "/admin",
+  "name": "Paola & Azarias — Administration",
+  "short_name": "P&A Admin",
+  "description": "Gestion des invités, des tables et des invitations",
+  "lang": "fr",
+  "start_url": "/admin",
+  "scope": "/admin",
+  "display": "standalone",
+  "background_color": "#0a0809",
+  "theme_color": "#0a0809",
+  "icons": [
+    { "src": "/admin/pwa-icon/192?kind=admin", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/admin/pwa-icon/512?kind=admin", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/admin/pwa-icon/512?kind=admin&maskable=1", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "id": "/admin/scan",
+  "name": "Paola & Azarias — Contrôle d'entrée",
+  "short_name": "P&A Entrée",
+  "description": "Scanner les QR codes des invités à l'entrée",
+  "lang": "fr",
+  "start_url": "/admin/scan",
+  "scope": "/admin/scan",
+  "display": "standalone",
+  "background_color": "#0a0809",
+  "theme_color": "#0a0809",
+  "icons": [
+    { "src": "/admin/pwa-icon/192?kind=scan", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/admin/pwa-icon/512?kind=scan", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/admin/pwa-icon/512?kind=scan&maskable=1", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
