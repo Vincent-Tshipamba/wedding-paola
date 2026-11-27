@@ -317,7 +317,7 @@ export function ScannerApp({ initialTotals, isAdmin }: { initialTotals: Totals; 
             <header className="mb-4 flex flex-wrap items-center justify-between gap-3">
                 <div>
                     <p className="font-script text-4xl leading-none text-gold-soft">Contrôle d&apos;entrée</p>
-                    <p className="mt-1 text-xs uppercase tracking-[0.4em] text-gold">Azarias &amp; Paola</p>
+                    <p className="mt-1 text-xs uppercase tracking-[0.4em] text-gold">Azaria &amp; Paola</p>
                 </div>
                 <div className="flex items-center gap-2">
                     <div className="rounded-xl border border-gold/30 bg-surface px-4 py-2 text-center">

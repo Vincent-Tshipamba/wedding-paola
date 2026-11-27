@@ -29,13 +29,13 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
       url,
       title: t("title"),
       description: t("description"),
-      siteName: "Azarias & Paola",
+      siteName: "Azaria & Paola",
       images: [
         {
           url: "/couple/together.jpeg",
           width: 1120,
           height: 746,
-          alt: locale === "fr" ? "Azarias et Paola ensemble" : "Azarias and Paola together",
+          alt: locale === "fr" ? "Azaria et Paola ensemble" : "Azaria and Paola together",
         },
       ],
     },

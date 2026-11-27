@@ -29,7 +29,7 @@ export function AdminApp({ guests, tables, settings }: { guests: Guest[]; tables
         <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
             <header className="mb-8 flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <p className="font-script text-5xl leading-none text-gold-soft">Azarias &amp; Paola</p>
+                    <p className="font-script text-5xl leading-none text-gold-soft">Azaria &amp; Paola</p>
                     <p className="mt-1 text-xs uppercase tracking-[0.4em] text-gold">Gestion des invités</p>
                 </div>
                 <div className="flex flex-wrap gap-2">

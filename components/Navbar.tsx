@@ -88,7 +88,7 @@ export function Navbar() {
                         : "border-transparent bg-transparent",
                 )}
             >
-                <Link href="#home" className="font-script text-4xl leading-none text-gold" aria-label="Azarias & Paola">
+                <Link href="#home" className="font-script text-4xl leading-none text-gold" aria-label="Azaria & Paola">
                     A &amp; P
                 </Link>
 

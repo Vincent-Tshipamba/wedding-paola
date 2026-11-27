@@ -40,7 +40,7 @@ function Portrait({ src, initial }: { src: string; initial: string }) {
 export function Couple() {
     const t = useTranslations("couple");
     const people = [
-        { ...wedding.couple.groom, role: t("groom"), bio: t("bio.azarias") },
+        { ...wedding.couple.groom, role: t("groom"), bio: t("bio.Azaria") },
         { ...wedding.couple.bride, role: t("bride"), bio: t("bio.paola") },
     ];
     return (
@@ -178,7 +178,7 @@ export function Footer() {
     const t = useTranslations("footer");
     return (
         <footer className="border-t border-gold/20 py-16 text-center">
-            <p className="font-serif text-4xl text-gold-soft">Azarias &amp; Paola</p>
+            <p className="font-serif text-4xl text-gold-soft">Azaria &amp; Paola</p>
             <p className="mt-3 tracking-widest text-gold">{wedding.hashtag}</p>
             <p className="mt-2 text-sm text-cream/50">{t("thanks")}</p>
         </footer>

@@ -8,7 +8,7 @@ const vibes = Great_Vibes({ subsets: ["latin"], weight: "400", variable: "--font
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-    title: "Admin — Azarias & Paola",
+    title: "Admin — Azaria & Paola",
     robots: { index: false, follow: false },
     manifest: "/admin.webmanifest", // installable app: "A&P Admin"
     icons: { icon: "/admin/pwa-icon/192?kind=admin", apple: "/admin/pwa-icon/180?kind=admin" },

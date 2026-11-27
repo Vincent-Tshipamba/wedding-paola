@@ -10,7 +10,7 @@ export type WeddingEvent = {
 };
 
 export const wedding = {
-  hashtag: "#AzariasEtPaola",
+  hashtag: "#AzariaEtPaola",
   city: "Kinshasa", // TODO
   couple: {
     bride: {
@@ -20,10 +20,10 @@ export const wedding = {
       photo: "/couple/paola2.jpeg",
     },
     groom: {
-      firstName: "Azarias",
+      firstName: "Azaria",
       lastName: "Mbiye",
-      bio: "TODO: a few warm lines about Azarias.",
-      photo: "/couple/azaria.jpeg", // e.g. "/couple/azarias.jpg"
+      bio: "TODO: a few warm lines about Azaria.",
+      photo: "/couple/azaria.jpeg", // e.g. "/couple/Azaria.jpg"
     },
   },
   story: [
@@ -74,53 +74,53 @@ export const wedding = {
   gallery: [
     {
       src: "/gallery/1.jpeg",
-      alt: "Azarias and Paola, photo 1",
+      alt: "Azaria and Paola, photo 1",
     },
     {
       src: "/gallery/2.jpeg",
-      alt: "Azarias and Paola, photo 2",
+      alt: "Azaria and Paola, photo 2",
     },
     {
       src: "/gallery/3.jpeg",
-      alt: "Azarias and Paola, photo 3",
+      alt: "Azaria and Paola, photo 3",
     },
     {
       src: "/gallery/4.jpeg",
-      alt: "Azarias and Paola, photo 4",
+      alt: "Azaria and Paola, photo 4",
     },
     {
       src: "/gallery/5.jpeg",
-      alt: "Azarias and Paola, photo 5",
+      alt: "Azaria and Paola, photo 5",
     },
     {
       src: "/gallery/6.jpeg",
-      alt: "Azarias and Paola, photo 6",
+      alt: "Azaria and Paola, photo 6",
     },
     {
       src: "/gallery/7.jpeg",
-      alt: "Azarias and Paola, photo 7",
+      alt: "Azaria and Paola, photo 7",
     },
     {
       src: "/gallery/8.jpeg",
-      alt: "Azarias and Paola, photo 8",
+      alt: "Azaria and Paola, photo 8",
     },
     {
       src: "/gallery/9.jpeg",
-      alt: "Azarias and Paola, photo 9",
+      alt: "Azaria and Paola, photo 9",
     },
     {
       src: "/gallery/10.jpeg",
-      alt: "Azarias and Paola, photo 10",
+      alt: "Azaria and Paola, photo 10",
     },
     {
       src: "/gallery/11.jpeg",
-      alt: "Azarias and Paola, photo 11",
+      alt: "Azaria and Paola, photo 11",
     },
     {
       src: "/gallery/12.jpeg",
-      alt: "Azarias and Paola, photo 12",
+      alt: "Azaria and Paola, photo 12",
     },
-  ] as { src: string; alt: string }[], // e.g. [{ src: "/gallery/1.jpg", alt: "Azarias and Paola, photo 1" }]
+  ] as { src: string; alt: string }[], // e.g. [{ src: "/gallery/1.jpg", alt: "Azaria and Paola, photo 1" }]
 };
 
 export const mainDate = wedding.events[0].date;
